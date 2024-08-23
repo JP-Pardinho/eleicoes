@@ -6,7 +6,7 @@
 typedef struct{
     char nomePrtd[50];
     char siglaPrtd[10];
-}partidos;
+}partidos; 
 
 
 int alocaVetPartidos(int tam){
