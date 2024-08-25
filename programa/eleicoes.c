@@ -91,7 +91,6 @@ void registrarFederacao(federacao*F, int pos){
     scanf("%s", F[pos].nomeFederacao);
     printf("Digite a sigla da Federacao: ");
     scanf("%s", F[pos].siglaFederacao);
-
 }
 
 int verificaExistenciaPartido(partidos*P, int tam, char nome){
@@ -128,6 +127,83 @@ void registraVoto(candidato*C, int numero, int tam){
 
 }
 
+int obterInteiro(){
+    int valor;
+    int resultado;
+
+    while(1){
+        resultado = scanf("%d", &valor);
+        
+        if (resultado == 1){
+            return valor;
+        }
+        else{
+            while (getchar() != '\n');
+            printf("Entrada inválida. Por favor, Digite um número inteiro: ");
+        }
+    }
+}
+
+void menu(){
+    int qntPartidos, qntCandidatos;
+    int i;
+    int continuar = 1;
+    int contador = 0;
+
+    printf("===============================\n");
+    printf("=   Eleições Escola Crescer   =\n");
+    printf("===============================\n\n");
+    printf("Precione enter para iniciar...\n");
+
+    getchar();
+
+    // Inicia a etapa de cadastros
+    
+    printf("==============================\n");
+    printf("=    Cadastro de Partidos    =\n");
+    printf("==============================\n\n");
+
+    while (continuar){
+        printf("Cadastrando o %dº partido\n", contador + 1);
+        contador++;
+
+        // inserirPartido();
+        printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
+        continuar = obterInteiro();
+    } 
+
+    continuar   = 1;
+    contador    = 0;
+
+    printf("================================\n");
+    printf("=    Cadastro de Candidatos    =\n");
+    printf("================================\n\n");
+
+    while (continuar){
+        printf("Cadastrando o %dº candidato\n", contador + 1);
+        contador++;
+        //cadastrarCandidato();
+        printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
+        continuar = obterInteiro();
+    }
+
+    continuar = 1;
+
+    printf("================================\n");
+    printf("=    Cadastro de Federações    =\n");
+    printf("================================\n\n");
+
+    while (continuar){
+        printf("Cadastrando a %dª federação\n", contador +1);
+        contador++;
+        //registrarFederacao();
+        printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
+        continuar = obterInteiro();
+    }
+    
+    
+    
+}
 
 int main() {
 
