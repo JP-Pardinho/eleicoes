@@ -15,6 +15,8 @@ void limpaTela() {
 typedef struct{
     char nomePrtd[50];
     char siglaPrtd[10];
+    char federacao;
+    // Ponteiro para vetor de candidato
 }partidos; 
 
 
@@ -37,7 +39,8 @@ typedef struct{
     char nomeCandidato[50];
     int idade;
     int num_canditados;
-    partidos filiacao;
+    int voto;
+    partidos filiacao; 
 }candidato;
 
 int alocaVetCandidatos(int tam){
@@ -58,6 +61,7 @@ int alocaVetCandidatos(int tam){
 typedef struct{
     char nomeFederacao[50];
     char siglaFederacao[10];
+    // Ponteiro para vetor de candidato 
 }federacao;
 
 int alocaVetFederacao(int tam){
@@ -77,6 +81,7 @@ int alocaVetFederacao(int tam){
 //-------------------------------------------------------------------------//
 
 // CADASTROS / REGISTROS //
+// Criar mais um função para cadastrar partido, verificar(ok), inserir(ok)
 void inserirPartido(partidos*P, int pos){
     printf("Digite o nome do partido: ");
     scanf("%s", P[pos].nomePrtd);
@@ -89,7 +94,7 @@ void cadastrarCandidato(candidato*C, int pos){
     scanf("%s", C[pos].filiacao.nomePrtd);
     printf("Nome Completo: ");
     scanf("%s", C[pos].nomeCandidato);
-    printf("Idade: ");
+    printf("Idad    e: ");
     scanf("%d", &(C[pos].idade));
     printf("Numero de eleitor: ");
     scanf("%d", &(C[pos].num_canditados));
@@ -240,15 +245,20 @@ void menu(){
             /*
                 Registrar numeração num vetor de tamanho n, depois esse n vai ser parametro para a função verifica candidato 
             */
-            printf("Digite o numero do candidato (5 Digitos): \n");
-            voto = obterInteiro();
-            if (){
-                // comparar com numero dos candidatos existentes
-            }
-            else if ()
+
+           //chamafuncao()
+
+
+
+            // printf("Digite o numero do candidato (5 Digitos): \n");
+            // voto = obterInteiro();
+            // if (){
+            //     // comparar com numero dos candidatos existentes
+            // }
+            // else if ()
         }
         else if (op == 2){
-            break;
+            return 0;
         }
     
     }
@@ -256,7 +266,9 @@ void menu(){
 
 int main() {
 
-    
+    // Criar variaveis contadoras para Votos Nulos, Votos Validos, Votos em Branco
+    menu();
+
 
     return 0;
 }
