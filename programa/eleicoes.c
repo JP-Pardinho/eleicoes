@@ -30,7 +30,6 @@ int alocaVetPartidos(int tam){
     if (vetPartido == NULL){
         printf("Erro: alocação mal sucedida");
         exit(1);
-
     }
     return *vetPartido;
 }
@@ -78,6 +77,7 @@ int alocaVetFederacao(int tam){
     }
     return *vetFederacao;
 }
+
 //-------------------------------------------------------------------------//
 
 // CADASTROS / REGISTROS //
@@ -138,7 +138,6 @@ void registraVoto(candidato*C, int numero, int tam){
             printf("VOTO NULO");
         }
     }
-
 }
 
 int obterInteiro(){
@@ -158,9 +157,41 @@ int obterInteiro(){
     }
 }
 
-int verificaCandidato (int numero, candidato*C, int tam){
+int verificaCandidato (candidato*C, int numero, int tam){
     int i;
-    for(i=0; i<)
+    for(i=0; i<tam; i++){
+        if(C[i].num_canditados == numero){
+            return 1; // Numero de condidato existe 
+        }
+        return 0; // Numero de candidato não existe
+    }
+}
+
+// Tentar simplificar ou unir as duas verificações
+void imprimeNomeCandito (candidato*C, int numero, int tam){
+    int i;
+    for(i=0; i<tam; i++){
+        if(C[i].num_canditados == numero){
+            printf("%s", C[i].nomeCandidato);
+        }
+    }
+}
+
+void votacao (){
+    int voto, op;
+
+    printf("Digite o numero do seu candidato(5 Digitos): \n");
+    voto = obterInteiro();
+
+    do {
+        if(verificaCandidato(/*passar variaveis*/)){
+            imprimeNomeCandito(/*passar variaveis*/);
+            
+        }else{
+            printf("Voto Nulo!");
+            
+        }
+    } while(op != 1);
 }
 
 void secao1(int votos, int votoValido, int votoNulo, int votoBranco, int q_eleitoral){
@@ -279,6 +310,8 @@ void menu(){
         printf("\n");
 
         op = obterInteiro();
+
+        // FAZER MENU DE CONFIRMAÇÃO DE VOTO, RETORNAR E VOTO EM BRANCO
 
         if (op == 1){
             /*
