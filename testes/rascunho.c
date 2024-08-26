@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+void limpaTela() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+
 int obterInteiro(){
     int valor;
     int resultado;
@@ -30,18 +39,28 @@ int main(){
     getchar();
 
     // Inicia a etapa de cadastros
-    
+    limpaTela();
+
     printf("==============================\n");
     printf("=    Cadastro de Partidos    =\n");
     printf("==============================\n\n");
-    printf("Precione enter para iniciar... \n");
-    getchar();
+
 
     while (continuar){
         // inserirPartido();
         printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
         continuar = obterInteiro();
     } 
+
+    limpaTela();
+    printf("========================\n");
+    printf("=   Menu de Votação    =\n");
+    printf("= 1) Registrar Voto    =\n");
+    printf("= 2) Encerrar Votação  =\n");
+    printf("========================\n");    
+    printf("\n");
+
+   
 
     return 0;
 }

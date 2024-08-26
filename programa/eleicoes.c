@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+void limpaTela() {
+    /*Função limpa tela, responsavél por limpar o terminal e deixar o ambiente mais apresentavél, não retorna nada.*/
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
 // STRUCTS E ALOCAÇÃO DE MEMÓRIA //
 typedef struct{
     char nomePrtd[50];
@@ -65,7 +74,7 @@ int alocaVetFederacao(int tam){
     }
     return *vetFederacao;
 }
-// ------------------------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------------//
 
 // CADASTROS / REGISTROS //
 void inserirPartido(partidos*P, int pos){
@@ -144,29 +153,35 @@ int obterInteiro(){
     }
 }
 
-void menu(){
-    int qntPartidos, qntCandidatos;
+int verificaCandidato (int numero, candidato*C, int tam){
     int i;
+    for(i=0; i<)
+}
+
+void menu(){
     int continuar = 1;
     int contador = 0;
+    int op, voto;
 
+    printf("\n");
     printf("===============================\n");
     printf("=   Eleições Escola Crescer   =\n");
     printf("===============================\n\n");
-    printf("Precione enter para iniciar...\n");
+    printf("Pressione enter para iniciar...\n");
 
     getchar();
 
     // Inicia a etapa de cadastros
     
+    limpaTela();
     printf("==============================\n");
     printf("=    Cadastro de Partidos    =\n");
     printf("==============================\n\n");
+    printf("\n");
 
     while (continuar){
         printf("Cadastrando o %dº partido\n", contador + 1);
         contador++;
-
         // inserirPartido();
         printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
         continuar = obterInteiro();
@@ -175,9 +190,11 @@ void menu(){
     continuar   = 1;
     contador    = 0;
 
+    limpaTela();
     printf("================================\n");
     printf("=    Cadastro de Candidatos    =\n");
     printf("================================\n\n");
+    printf("\n");
 
     while (continuar){
         printf("Cadastrando o %dº candidato\n", contador + 1);
@@ -188,10 +205,13 @@ void menu(){
     }
 
     continuar = 1;
+    contador = 0;
 
+    limpaTela();
     printf("================================\n");
     printf("=    Cadastro de Federações    =\n");
     printf("================================\n\n");
+    printf("\n");
 
     while (continuar){
         printf("Cadastrando a %dª federação\n", contador +1);
@@ -201,8 +221,37 @@ void menu(){
         continuar = obterInteiro();
     }
     
+    continuar = 1;
+
+    while (continuar)
+    {
+        // Inicio Menu de Votação 
+        limpaTela();
+        printf("=================================\n");
+        printf("=        Menu de Votação        =\n");
+        printf("=       1) Registrar Voto       =\n");
+        printf("=       2) Encerrar Votação     =\n");
+        printf("=================================\n");    
+        printf("\n");
+
+        op = obterInteiro();
+
+        if (op == 1){
+            /*
+                Registrar numeração num vetor de tamanho n, depois esse n vai ser parametro para a função verifica candidato 
+            */
+            printf("Digite o numero do candidato (5 Digitos): \n");
+            voto = obterInteiro();
+            if (){
+                // comparar com numero dos candidatos existentes
+            }
+            else if ()
+        }
+        else if (op == 2){
+            break;
+        }
     
-    
+    }
 }
 
 int main() {
