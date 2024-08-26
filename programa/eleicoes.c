@@ -163,6 +163,45 @@ int verificaCandidato (int numero, candidato*C, int tam){
     for(i=0; i<)
 }
 
+void secao1(int votos, int votoValido, int votoNulo, int votoBranco, int q_eleitoral){
+    /*Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. */
+
+    // ADICIONAR AS VARIAVÉIS DE CADA ELEMENTO
+
+    printf("Votos gerais: \n");
+    printf("Votos valídos: \n");
+    printf("Votos brancos: \n");
+    printf("Votos nulos: \n");
+    printf("Quocinte eleitoral: \n");
+}
+
+void secao2(){
+    /*Função responsavél por mostrar na tela uma tabela com todos os candidatos e o numero de votos que cada um teve. */
+
+}
+
+void secao3(int votoPartido, int votoFederação){
+    /*Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. */
+
+
+    for()
+        printf("Total de votos do partido/federação: ")
+}
+
+void secao4(q_partidario){
+    /*Função responsavél por mostrar na tela uma tabela informando o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. */
+
+}
+
+void secao5(){
+    /*Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua legenda. */
+
+}
+
+void secao6(){
+    /*Função responsavél por mostrar na tela uma tabela com os candidatos suplentes, em ordem decrescente de quociente eleitoral. */
+}
+
 void menu(){
     int continuar = 1;
     int contador = 0;
@@ -268,6 +307,8 @@ int main() {
 
     // Criar variaveis contadoras para Votos Nulos, Votos Validos, Votos em Branco
     menu();
+
+
 
 
     return 0;
