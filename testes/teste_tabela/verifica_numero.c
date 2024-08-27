@@ -47,13 +47,13 @@ int main(){
     int i, tam;
     int verifica;
     char numCandidato[5];
+    char mesagem_erro = ("Numero do Candidato invalido, digite apenas numeros!\n");
 
     do{
         verifica = 0;
-
         scanf("%s", numCandidato);
         tam = strlen(numCandidato);
-        
+        printf("%d\n", tam);
         if(tam == 5){
             for(i=0; i<5; i++){
                 if(numCandidato[i] >= '0' && numCandidato[i] <= '9'){
@@ -63,11 +63,13 @@ int main(){
 
             if(verifica == 5){
                 printf("Numero candidato\n");
-            } else{
-                printf("Numero do Candidato invalido, digite apenas numeros!\n");
+            }else{
+                printf("%c", mesagem_erro);
             }
+        }else{
+            printf("%c", mesagem_erro);
         }
-        printf("%s\n", numCandidato);
+
     }while(verifica != 5);
     
     return 0;

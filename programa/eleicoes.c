@@ -28,7 +28,7 @@ int alocaVetPartidos(int tam){
 typedef struct{
     char nomeCandidato[50];
     int idade;
-    char num_canditados;
+    char num_canditados[5];
     int voto;
     partidos filiacao; 
 }candidato;
@@ -96,8 +96,9 @@ void cadastrarCandidato(candidato*C, int pos){
     scanf("%s", C[pos].nomeCandidato);
     printf("Idade: ");
     scanf("%d", &(C[pos].idade));
+    C[pos].idade = obterInteiro();
     printf("Numero de eleitor: ");
-    C[pos].num_canditados = verificaNumeroCandidato();
+    *C[pos].num_canditados = verificaNumeroCandidato();
 }
 
 void registrarFederacao(federacao*F, int pos){
@@ -186,12 +187,12 @@ char verificaNumeroCandidato(){
     int i, tam;
     int verifica = 0;
     char numCandidato[5];
+    char mesagem_erro = "Numero do Candidato invalido, digite apenas numeros!\n";
 
     do{
         verifica = 0;
         scanf("%s", numCandidato);
         tam = strlen(numCandidato);
-
         if(tam == 5){
             for(int i=0; i<5; i++){
                 if(numCandidato[i] >= '0' && numCandidato[i] <= '9'){
@@ -201,9 +202,12 @@ char verificaNumeroCandidato(){
 
             if(verifica == 5){
                 return numCandidato;
-            } else{
-                printf("Numero do Candidato invalido, digite apenas numeros!\n");
+            }else{
+                printf("%c", mesagem_erro);
             }
+        }
+        else{
+            printf("%c", mesagem_erro);
         }
     }while(verifica != 5);
 }
@@ -273,7 +277,7 @@ void secao6(){
 }
 
 void menu(){
-
+    // Criar contadores para cada opção!! 
     int continuar = 1;
     int contador = 0;
     int op, voto;
@@ -314,7 +318,7 @@ void menu(){
             while (continuar){
                 printf("Cadastrando o %dº partido\n", contador + 1);
                 contador++;
-                // inserirPartido();
+                // inserirPartido(); 
                 printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
                 continuar = obterInteiro();
             }
