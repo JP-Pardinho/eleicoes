@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void limpaTela() {
-    /*Função limpa tela, responsavél por limpar o terminal e deixar o ambiente mais apresentavél, não retorna nada.*/
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear");
-    #endif
-}
-
 // STRUCTS E ALOCAÇÃO DE MEMÓRIA //
 typedef struct{
     char nomePrtd[50];
@@ -129,6 +120,11 @@ void participarDaFederacao(federacao*f, partidos*P, char nome){
 }
 
 void registraVoto(candidato*C, int numero, int tam){
+    /*
+        Alterar informações no registra voto...
+        - Temos que receber um string, verificar se todos os digitos digitados, são numeros inteiros, depois verificar se o numero pertence a um candidato
+        - Se o verificaCandidato() retornar que existe, chamar a função menuConfirmação(), para armazenar voto++, em voto_valido, voto_nulo, voto_branco e voto(dentro da struct do candidato)
+    */
     int i;
     printf("Digite o número do candidato (5 digitos): ");
     for(i=0; i<tam; i++){
@@ -248,7 +244,7 @@ void menu(){
 
     // Inicia a etapa de cadastros
     
-    limpaTela();
+    
     printf("==============================\n");
     printf("=    Cadastro de Partidos    =\n");
     printf("==============================\n\n");
@@ -268,7 +264,7 @@ void menu(){
         continuar   = 1;
         contador    = 0;
 
-        limpaTela();
+        
         printf("================================\n");
         printf("=    Cadastro de Candidatos    =\n");
         printf("================================\n\n");
@@ -291,7 +287,7 @@ void menu(){
     continuar = 1;
     contador = 0;
 
-    limpaTela();
+    
     printf("================================\n");
     printf("=    Cadastro de Federações    =\n");
     printf("================================\n\n");
@@ -310,7 +306,7 @@ void menu(){
     while (continuar)
     {
         // Inicio Menu de Votação 
-        limpaTela();
+        
         printf("=================================\n");
         printf("=        Menu de Votação        =\n");
         printf("=       1) Registrar Voto       =\n");
