@@ -16,7 +16,7 @@ int alocaVetPartidos(int tam){
     Será exibida uma mensagem de erro, caso a alocação seja mal sucedida e retorna 
     o ponteiro *vetPartido*/
     int *vetPartido = NULL;
-    vetPartido = (int*)maloc(tam*sizeof(int));
+    vetPartido = (int*)malloc(tam*sizeof(int));
 
     if (vetPartido == NULL){
         printf("Erro: alocação mal sucedida");
@@ -38,7 +38,7 @@ int alocaVetCandidatos(int tam){
     Será exibida uma mensagem de erro, caso a alocação seja mal sucedida e retorna 
     o ponteiro *vetCandidato*/
     int *vetCandidato = NULL;
-    vetCandidato = (int*)maloc(tam*sizeof(int));
+    vetCandidato = (int*)malloc(tam*sizeof(int));
 
     if (vetCandidato == NULL){
         printf("Erro: alocação mal sucedida");
@@ -59,7 +59,7 @@ int alocaVetFederacao(int tam){
     Será exibida uma mensagem de erro, caso a alocação seja mal sucedida e retorna 
     o ponteiro *vetFederacao*/
     int *vetFederacao = NULL;
-    vetFederacao = (int*)maloc(tam*sizeof(int));
+    vetFederacao = (int*)malloc(tam*sizeof(int));
 
     if (vetFederacao == NULL){
         printf("Erro: alocação mal sucedida");
@@ -73,13 +73,22 @@ int alocaVetFederacao(int tam){
 
 // CADASTROS / REGISTROS //
 // Criar mais um função para cadastrar partido, verificar(ok), inserir(ok)
-void inserirPartido(partidos*P, int pos){
+void cadastrarPartido(int pos, partidos*P){
     printf("Digite o nome do partido: ");
     scanf("%s", P[pos].nomePrtd);
     printf("Digite a sigla do partido: ");
     scanf("%s", P[pos].siglaPrtd);
 }
+void inserirPartido(partidos*P, char* nomePrtd, int tam, int pos){
+    if(verificaExistenciaPartido(P,tam,nomePrtd)){
+        printf("Este partido já existe!\n");
+    } else{
+        strncpy(P[pos].nomePrtd, nomePrtd, sizeof(P[pos].nomePrtd)-1);
+        P[pos].nomePrtd[sizeof(P[pos].nomePrtd)-1] = '\0';
+        printf("Partido inserido!");
+    }
 
+}
 void cadastrarCandidato(candidato*C, int pos){
     printf("Pardido Filiado: ");
     scanf("%s", C[pos].filiacao.nomePrtd);
@@ -98,7 +107,7 @@ void registrarFederacao(federacao*F, int pos){
     scanf("%s", F[pos].siglaFederacao);
 }
 
-int verificaExistenciaPartido(partidos*P, int tam, char nome){
+int verificaExistenciaPartido(partidos*P, int tam, char* nome){
     /* A função verifica se o partido digitado pelo usuário existe. A mesma foi criada
     com a intencao de verificar se o partido existe, a fim de não registrar outro com o
     mesmo nome. O mesmo acontece para fazer parte da federacao, visto que o partido só pode
@@ -114,9 +123,21 @@ int verificaExistenciaPartido(partidos*P, int tam, char nome){
     return 0; // Partido não encontrato
 }
 
-void participarDaFederacao(federacao*f, partidos*P, char nome){
+void participarDaFederacao(federacao*F, partidos*P, char nome){
     
-    
+}
+
+int verificaExisFederacao(federacao*F, int tam, char* nome){
+    /*A função verifica se a federação que o usuário deseja inserir já existe. Caso a federação 
+    exista a função retorna 1, caso contrário retorna 0. Quando é a função retorna zero é possível
+    registrar a federação.*/
+    int i;
+    for(i=0; i<tam; i++){
+        if(strcmp(F[i].nomeFederacao, nome) == 0){
+            return 1; //Federacao encontrada
+        }
+    }
+    return 0; //Federacao não encontrada
 }
 
 void registraVoto(candidato*C, int numero, int tam){
@@ -194,7 +215,7 @@ void secao1(int votos, int votosValido, int votosNulo, int votosBranco, int q_el
     // ADICIONAR AS VARIAVÉIS DE CADA ELEMENTO
 
     printf("Votos gerais: %d\n", votos);
-    printf("Votos valídos: %d\n", votosValidos);
+    printf("Votos valídos: %d\n", votosValido);
     printf("Votos brancos: %d\n", votosNulo);
     printf("Votos nulos: %d\n", votosBranco);
     printf("Quocinte eleitoral: %d\n", q_eleitoral);
