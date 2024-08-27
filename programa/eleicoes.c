@@ -194,21 +194,24 @@ void votacao (){
     } while(op != 1);
 }
 
-void secao1(int votos, int votoValido, int votoNulo, int votoBranco, int q_eleitoral){
+void secao1(int votos, int votosValido, int votosNulo, int votosBranco, int q_eleitoral){
     /*Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. */
 
     // ADICIONAR AS VARIAVÉIS DE CADA ELEMENTO
 
-    printf("Votos gerais: \n");
-    printf("Votos valídos: \n");
-    printf("Votos brancos: \n");
-    printf("Votos nulos: \n");
-    printf("Quocinte eleitoral: \n");
+    printf("Votos gerais: %d\n", votos);
+    printf("Votos valídos: %d\n", votosValidos);
+    printf("Votos brancos: %d\n", votosNulo);
+    printf("Votos nulos: %d\n", votosBranco);
+    printf("Quocinte eleitoral: %d\n", q_eleitoral);
 }
 
-void secao2(){
+void secao2(nomeCandidato){
     /*Função responsavél por mostrar na tela uma tabela com todos os candidatos e o numero de votos que cada um teve. */
-
+    printf("===================================");
+    for()
+        printf("=Candidato: %c Votos recebidos: %d=", nomeCandidato);
+    printf("===================================");
 }
 
 void secao3(int votoPartido, int votoFederação){
@@ -216,7 +219,7 @@ void secao3(int votoPartido, int votoFederação){
 
 
     for()
-        printf("Total de votos do partido/federação: ")
+        printf("Total de votos do partido/federação: %d")
 }
 
 void secao4(q_partidario){
@@ -245,7 +248,7 @@ void menu(){
     printf("Pressione enter para iniciar...\n");
 
     getchar();
-
+    
     // Inicia a etapa de cadastros
     
     limpaTela();
