@@ -332,7 +332,7 @@ void menu(){
             printf("___________________________________\n");
             printf("|                                 |\n");
             printf("|      Cadastro de Candidatos     |\n");
-            printf("|_________________________________|\n\n");
+            printf("|_________________________________|\n");
             printf("\n");
 
             while (continuar){
