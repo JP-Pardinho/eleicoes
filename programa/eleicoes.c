@@ -37,7 +37,7 @@ int alocaVetPartidos(int tam){
 typedef struct{
     char nomeCandidato[50];
     int idade;
-    int num_canditados;
+    char num_canditados;
     int voto;
     partidos filiacao; 
 }candidato;
@@ -186,10 +186,8 @@ void votacao (){
     do {
         if(verificaCandidato(/*passar variaveis*/)){
             imprimeNomeCandito(/*passar variaveis*/);
-            
         }else{
             printf("Voto Nulo!");
-            
         }
     } while(op != 1);
 }
@@ -219,7 +217,7 @@ void secao3(int votoPartido, int votoFederação){
 
 
     for()
-        printf("Total de votos do partido/federação: %d")
+        printf("Total de votos: %d");
 }
 
 void secao4(q_partidario){
@@ -237,8 +235,8 @@ void secao6(){
 }
 
 void menu(){
-    int continuar = 1;
-    int contador = 0;
+    int continuar;
+    int contador;
     int op, voto;
 
     printf("\n");
@@ -246,9 +244,8 @@ void menu(){
     printf("=   Eleições Escola Crescer   =\n");
     printf("===============================\n\n");
     printf("Pressione enter para iniciar...\n");
-
     getchar();
-    
+
     // Inicia a etapa de cadastros
     
     limpaTela();
@@ -257,29 +254,38 @@ void menu(){
     printf("==============================\n\n");
     printf("\n");
 
-    while (continuar){
-        printf("Cadastrando o %dº partido\n", contador + 1);
-        contador++;
-        // inserirPartido();
-        printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
-        continuar = obterInteiro();
+        while (continuar){
+            printf("Cadastrando o %dº partido\n", contador + 1);
+            contador++;
+            // inserirPartido();
+            printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
+            continuar = obterInteiro();
+        }
     } 
 
-    continuar   = 1;
-    contador    = 0;
+    else if(op == 2){
+        //
+        continuar   = 1;
+        contador    = 0;
 
-    limpaTela();
-    printf("================================\n");
-    printf("=    Cadastro de Candidatos    =\n");
-    printf("================================\n\n");
-    printf("\n");
+        limpaTela();
+        printf("================================\n");
+        printf("=    Cadastro de Candidatos    =\n");
+        printf("================================\n\n");
+        printf("\n");
 
-    while (continuar){
-        printf("Cadastrando o %dº candidato\n", contador + 1);
-        contador++;
-        //cadastrarCandidato();
-        printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
-        continuar = obterInteiro();
+        /*
+         Na hora de pedir o numero do candidato lembrar de verificar se o numero digitado tem 5 digitos, pedir esse valor como char, e ver se todos os digitos desse intervalo são numeros inteiros.
+
+         tabela ascii verificar se cada elemento esta entre 0 e 9
+        */
+        while (continuar){
+            printf("Cadastrando o %dº candidato\n", contador + 1);
+            contador++;
+            //cadastrarCandidato();
+            printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
+            continuar = obterInteiro();
+        }
     }
 
     continuar = 1;
