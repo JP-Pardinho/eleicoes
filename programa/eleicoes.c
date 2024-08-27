@@ -94,10 +94,10 @@ void cadastrarCandidato(candidato*C, int pos){
     scanf("%s", C[pos].filiacao.nomePrtd);
     printf("Nome Completo: ");
     scanf("%s", C[pos].nomeCandidato);
-    printf("Idad    e: ");
+    printf("Idade: ");
     scanf("%d", &(C[pos].idade));
     printf("Numero de eleitor: ");
-    scanf("%d", &(C[pos].num_canditados));
+    C[pos].num_canditados = verificaNumeroCandidato();
 }
 
 void registrarFederacao(federacao*F, int pos){
@@ -180,6 +180,32 @@ int obterInteiro(){
             printf("Entrada inválida. Por favor, Digite um número inteiro: ");
         }
     }
+}
+
+char verificaNumeroCandidato(){
+    int i, tam;
+    int verifica = 0;
+    char numCandidato[5];
+
+    do{
+        verifica = 0;
+        scanf("%s", numCandidato);
+        tam = strlen(numCandidato);
+
+        if(tam == 5){
+            for(int i=0; i<5; i++){
+                if(numCandidato[i] >= '0' && numCandidato[i] <= '9'){
+                    verifica += 1;
+                }
+            }
+
+            if(verifica == 5){
+                return numCandidato;
+            } else{
+                printf("Numero do Candidato invalido, digite apenas numeros!\n");
+            }
+        }
+    }while(verifica != 5);
 }
 
 // Mesclar as duas funções verificaCandidato() e imprimeNomeCandidato()
