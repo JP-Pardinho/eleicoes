@@ -351,3 +351,28 @@ int main() {
 
     return 0;
 }
+
+
+/* CASO TENHA TEMPO, TENTAR INCLUIR A EXTENSÃO TIME.H PARA PEGAR A HORA DO COMPUTADOR E MOSTRA A HORA EXATA QUE CADA VOTO FOI COMPUTADO.  
+int main() {
+    // Variável para armazenar o tempo atual
+    time_t tempo_atual;
+    // Estrutura para armazenar a data e hora local
+    struct tm *hora_local;
+    // String para armazenar a hora formatada
+    char buffer[80];
+
+    // Obtém o tempo atual em segundos desde 1 de Janeiro de 1970 (Epoch)
+    time(&tempo_atual);
+
+    // Converte o tempo para a hora local
+    hora_local = localtime(&tempo_atual);
+
+    // Formata a hora em uma string legível
+    strftime(buffer, 80, "Hora atual: %H:%M:%S", hora_local);
+
+    // Imprime a hora atual
+    printf("%s\n", buffer);
+
+    return 0;
+}*/
