@@ -3,13 +3,14 @@
 
 int main(){
     char numCandidato[5];
-    int verifica;
     int tam;
+    int verifica;
 
     printf("Numero candidato: \n");
-
     do{
+        verifica = 0;
         scanf("%s", numCandidato);
+        tam = strlen(numCandidato);
         if(tam == 5){
             for(int i=0; i<5; i++){
                 if(numCandidato[i] >= '0' && numCandidato[i] <= '9'){
@@ -17,22 +18,22 @@ int main(){
                 }
             }
             
-            if(verificaCandidato()){
+            if(verifica == 5){
                 printf("Voto Válido\n");
                 printf("Nome do desgraçado\n");
                 printf("%s\n", numCandidato);
                 printf("\n");
                 // chamar/criar o menuConfirmação() (função para registrar os votos validos, nulos e brancos)
             } else{
-                printf("VOTO NULO!\n");
+                printf("Numero do Candidato invalido, digite apenas numeros!\n");
+
                 // chamar/criar o menuConfirmação() (função para registrar os votos validos, nulos e brancos) 
             }
         }
         else{
             printf("VOTO NULO!\n");
-            printf("Digite um numero")
         }
 
-    }while(tam != 5);
+    }while(verifica != 5);
     return 0;
 }
