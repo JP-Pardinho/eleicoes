@@ -22,7 +22,7 @@ int alocaVetPartidos(int tam){
         printf("Erro: alocação mal sucedida");
         exit(1);
     }
-    return vetPartido;
+    return *vetPartido;
 }
 
 typedef struct{
@@ -32,6 +32,7 @@ typedef struct{
     int voto;
     partidos filiacao; 
 }candidato;
+
 
 int alocaVetCandidatos(int tam){
     /*Função que realiza a alocação de memória para o ponteiro dos candidatos.
@@ -45,7 +46,7 @@ int alocaVetCandidatos(int tam){
         exit(1);
 
     }
-    return vetCandidato;
+    return *vetCandidato;
 }
 
 typedef struct{
@@ -53,6 +54,7 @@ typedef struct{
     char siglaFederacao[10];
     // Ponteiro para vetor de candidato 
 }federacao;
+
 
 int alocaVetFederacao(int tam){
     /*Função que realiza a alocação de memória para o ponteiro dos federacoes.
@@ -66,55 +68,9 @@ int alocaVetFederacao(int tam){
         exit(1);
 
     }
-    return vetFederacao;
+    return *vetFederacao;
 }
 
-//-------------------------------------------------------------------------//
-
-// CADASTROS / REGISTROS //
-// Criar mais um função para cadastrar partido, verificar(ok), inserir(ok)
-void cadastrarPartido(int pos, partidos*P, int *tam){
-    printf("Digite o nome do partido: ");
-    scanf("%s", P[pos].nomePrtd);
-    printf("Digite a sigla do partido: ");
-    scanf("%s", P[pos].siglaPrtd);
-    
-    if(!verificaExistenciaPartido(P,tam,P[pos].nomePrtd)){
-        printf("Partido inserido\n");
-        (*tam++);
-    }else{
-        printf("Este Partido já existe");
-    }
-}
-//Talvez seja não seja necessário;
-void inserirPartido(partidos*P, char* nomePrtd, int tam, int pos){
-    if(verificaExistenciaPartido(P,tam,nomePrtd)){
-        printf("Este partido já existe!\n");
-    } else{
-        strncpy(P[pos].nomePrtd, nomePrtd, sizeof(P[pos].nomePrtd)-1);
-        P[pos].nomePrtd[sizeof(P[pos].nomePrtd)-1] = '\0';
-        printf("Partido inserido!");
-    }
-
-}
-void cadastrarCandidato(candidato*C, int pos){
-    printf("Pardido Filiado: ");
-    scanf("%s", C[pos].filiacao.nomePrtd);
-    printf("Nome Completo: ");
-    scanf("%s", C[pos].nomeCandidato);
-    printf("Idade: ");
-    scanf("%d", &(C[pos].idade));
-    C[pos].idade = obterInteiro();
-    printf("Numero de eleitor: ");
-    *C[pos].num_canditados = verificaNumeroCandidato();
-}
-
-void registrarFederacao(federacao*F, int pos){
-    printf("Digite o nome da Federacao: ");
-    scanf("%s", F[pos].nomeFederacao);
-    printf("Digite a sigla da Federacao: ");
-    scanf("%s", F[pos].siglaFederacao);
-}
 
 int verificaExistenciaPartido(partidos*P, int tam, char* nome){
     /* A função verifica se o partido digitado pelo usuário existe. A mesma foi criada
@@ -132,47 +88,49 @@ int verificaExistenciaPartido(partidos*P, int tam, char* nome){
     return 0; // Partido não encontrato
 }
 
-void participarDaFederacao(federacao*F, partidos*P, char nome){
-    
-}
 
-int verificaExisFederacao(federacao*F, int tam, char* nome){
-    /*A função verifica se a federação que o usuário deseja inserir já existe. Caso a federação 
-    exista a função retorna 1, caso contrário retorna 0. Quando é a função retorna zero é possível
-    registrar a federação.*/
-    int i;
-    for(i=0; i<tam; i++){
-        if(strcmp(F[i].nomeFederacao, nome) == 0){
-            return 1; //Federacao encontrada
+char verificaNumeroCandidato(){
+    int tam;
+    int verifica = 0;
+    char numCandidato[5];
+    do{
+        verifica = 0;
+        scanf("%s", numCandidato);
+        tam = strlen(numCandidato);
+        if(tam == 5){
+            for(int i=0; i<5; i++){
+                if(numCandidato[i] >= '0' && numCandidato[i] <= '9'){
+                    verifica += 1;
+                }
+            }
+
+            if(verifica == 5){
+                return *numCandidato;
+            }else{
+                printf("Numero do Candidato invalido, digite apenas numeros!\n");
+            }
         }
-    }
-    return 0; //Federacao não encontrada
-}
-
-char verificaNumeracao(){
-    
-}
-
-void registraVoto(candidato*C, int numero, int tam){
-    /*
-        Alterar informações no registra voto...
-        - Temos que receber um string, verificar se todos os digitos digitados, são numeros inteiros, depois verificar se o numero pertence a um candidato
-        - Se o verificaCandidato() retornar que existe, chamar a função menuConfirmação(), para armazenar voto++, em voto_valido, voto_nulo, voto_branco e voto(dentro da struct do candidato)
-    */
-    int i;
-    char numCandidato;
-
-    printf("Digite o número do candidato (5 digitos): ");
-    scanf("%s", numCandidato);
-
-    for(i=0; i<tam; i++){
-        if (C[i].num_canditados == numCandidato){
-            printf("%s", C[i].nomeCandidato);
-        } else{
-            printf("VOTO NULO");
+        else{
+            printf("Numero do Candidato invalido, digite apenas numeros!\n");
         }
+    }while(verifica != 5);
+}
+
+
+void cadastrarPartido(int pos, partidos*P, int *tam){
+    printf("Digite o nome do partido: ");
+    scanf("%s", P[pos].nomePrtd);
+    printf("Digite a sigla do partido: ");
+    scanf("%s", P[pos].siglaPrtd);
+    
+    if(!verificaExistenciaPartido(P,*tam,P[pos].nomePrtd)){
+        printf("Partido inserido\n");
+        //(*tam++);
+    }else{
+        printf("Este Partido já existe");
     }
 }
+
 
 int obterInteiro(){
     int valor;
@@ -191,34 +149,75 @@ int obterInteiro(){
     }
 }
 
-char verificaNumeroCandidato(){
-    int i, tam;
-    int verifica = 0;
-    char numCandidato[5];
-    char mesagem_erro = "Numero do Candidato invalido, digite apenas numeros!\n";
 
-    do{
-        verifica = 0;
-        scanf("%s", numCandidato);
-        tam = strlen(numCandidato);
-        if(tam == 5){
-            for(int i=0; i<5; i++){
-                if(numCandidato[i] >= '0' && numCandidato[i] <= '9'){
-                    verifica += 1;
-                }
-            }
+void inserirPartido(partidos*P, char* nomePrtd, int tam, int pos){
+    if(verificaExistenciaPartido(P,tam,nomePrtd)){
+        printf("Este partido já existe!\n");
+    } else{
+        strncpy(P[pos].nomePrtd, nomePrtd, sizeof(P[pos].nomePrtd)-1);
+        P[pos].nomePrtd[sizeof(P[pos].nomePrtd)-1] = '\0';
+        printf("Partido inserido!");
+    }
 
-            if(verifica == 5){
-                return numCandidato;
-            }else{
-                printf("%c", mesagem_erro);
-            }
-        }
-        else{
-            printf("%c", mesagem_erro);
-        }
-    }while(verifica != 5);
 }
+
+
+void cadastrarCandidato(candidato*C, int pos){
+    printf("Partido Filiado: ");
+    scanf("%s", C[pos].filiacao.nomePrtd);
+    printf("Nome Completo: ");
+    scanf("%s", C[pos].nomeCandidato);
+    printf("Idade: ");
+    scanf("%d", &(C[pos].idade));
+    C[pos].idade = obterInteiro();
+    printf("Numero de eleitor: ");
+    *C[pos].num_canditados = verificaNumeroCandidato();
+}
+
+
+void registrarFederacao(federacao*F, int pos){
+    printf("Digite o nome da Federacao: ");
+    scanf("%s", F[pos].nomeFederacao);
+    printf("Digite a sigla da Federacao: ");
+    scanf("%s", F[pos].siglaFederacao);
+}
+
+
+int verificaExisFederacao(federacao*F, int tam, char* nome){
+    /*A função verifica se a federação que o usuário deseja inserir já existe. Caso a federação 
+    exista a função retorna 1, caso contrário retorna 0. Quando é a função retorna zero é possível
+    registrar a federação.*/
+    int i;
+    for(i=0; i<tam; i++){
+        if(strcmp(F[i].nomeFederacao, nome) == 0){
+            return 1; //Federacao encontrada
+        }
+    }
+    return 0; //Federacao não encontrada
+}
+
+/*
+void registraVoto(candidato*C, int numero, int tam){
+
+        Alterar informações no registra voto...
+        - Temos que receber um string, verificar se todos os digitos digitados, são numeros inteiros, depois verificar se o numero pertence a um candidato
+        - Se o verificaCandidato() retornar que existe, chamar a função menuConfirmação(), para armazenar voto++, em voto_valido, voto_nulo, voto_branco e voto(dentro da struct do candidato)
+    
+    int i;
+    char numCandidato[5];
+
+    printf("Digite o número do candidato (5 digitos): ");
+    scanf("%s", numCandidato);
+
+    for(i=0; i<tam; i++){
+        if (C[i].num_canditados == numCandidato){
+            printf("%s", C[i].nomeCandidato);
+        } else{
+            printf("VOTO NULO");
+        }
+    }
+}
+*/
 
 // Mesclar as duas funções verificaCandidato() e imprimeNomeCandidato()
 int verificaCandidato (candidato*C, int numero, int tam){
@@ -242,9 +241,9 @@ void imprimeNomeCandidato (candidato*C, int numero, int tam){
     printf("Numero de candidato não existe\n");
 }
 
-
+/*
 void secao1(int votos, int votosValido, int votosNulo, int votosBranco, int q_eleitoral){
-    /*Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. */
+    Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. 
 
     // ADICIONAR AS VARIAVÉIS DE CADA ELEMENTO
 
@@ -256,34 +255,34 @@ void secao1(int votos, int votosValido, int votosNulo, int votosBranco, int q_el
 }
 
 void secao2(nomeCandidato){
-    /*Função responsavél por mostrar na tela uma tabela com todos os candidatos e o numero de votos que cada um teve. */
+    Função responsavél por mostrar na tela uma tabela com todos os candidatos e o numero de votos que cada um teve. 
     printf("===================================");
-    for()
+    // for()
         printf("=Candidato: %c Votos recebidos: %d=", nomeCandidato);
     printf("===================================");
 }
 
 void secao3(int votoPartido, int votoFederação){
-    /*Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. */
+    Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. 
 
-
-    for()
+    // for()
         printf("Total de votos: %d");
 }
 
 void secao4(q_partidario){
-    /*Função responsavél por mostrar na tela uma tabela informando o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. */
+    Função responsavél por mostrar na tela uma tabela informando o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. 
 
 }
 
 void secao5(){
-    /*Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua legenda. */
+    Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua legenda. 
 
 }
 
 void secao6(){
-    /*Função responsavél por mostrar na tela uma tabela com os candidatos suplentes, em ordem decrescente de quociente eleitoral. */
+    Função responsavél por mostrar na tela uma tabela com os candidatos suplentes, em ordem decrescente de quociente eleitoral. 
 }
+*/
 
 void menu(){
     // Criar contadores para cada opção!! 
@@ -379,47 +378,50 @@ void menu(){
             }
         }
 
+
         else if(op == 4){
             //Inicia processo de votação
             continuar = 1;
+            printf("Ok!\n");
 
-            while (continuar){
+            // while (continuar){
+                
+            //     // Inicio Menu de Votação 
+            //     // printf("=================================\n");
+            //     // printf("=        Menu de Votação        =\n");
+            //     // printf("=       1) Registrar Voto       =\n");
+            //     // printf("=       2) Encerrar Votação     =\n");
+            //     // printf("=================================\n");    
+            //     // printf("\n");
 
-                // Inicio Menu de Votação 
-                // printf("=================================\n");
-                // printf("=        Menu de Votação        =\n");
-                // printf("=       1) Registrar Voto       =\n");
-                // printf("=       2) Encerrar Votação     =\n");
-                // printf("=================================\n");    
-                // printf("\n");
+            //     op = obterInteiro();
 
-                op = obterInteiro();
+            //     // FAZER MENU DE CONFIRMAÇÃO DE VOTO, RETORNAR E VOTO EM BRANCO
 
-                // FAZER MENU DE CONFIRMAÇÃO DE VOTO, RETORNAR E VOTO EM BRANCO
+            //     if (op == 1){
+            //         /*
+            //             Registrar numeração num vetor de tamanho n, depois esse n vai ser parametro para a função verifica candidato 
+            //         */
 
-                if (op == 1){
-                    /*
-                        Registrar numeração num vetor de tamanho n, depois esse n vai ser parametro para a função verifica candidato 
-                    */
-
-                   //chamafuncao()
+            //        //chamafuncao()
 
 
 
-                    // printf("Digite o numero do candidato (5 Digitos): \n");
-                    // voto = obterInteiro();
-                    // if (){
-                    //     // comparar com numero dos candidatos existentes
-                    // }
-                    // else if ()
-                }
-                else if (op == 2){
-                    return 0;
-                }
+            //         // printf("Digite o numero do candidato (5 Digitos): \n");
+            //         // voto = obterInteiro();
+            //         // if (){
+            //         //     // comparar com numero dos candidatos existentes
+            //         // }
+            //         // else if ()
+            //     }
+            //     else if (op == 2){
+            //         return 0;
+            //     }
+            //     */
 
-            }
+            // }
         }
-    }while(op != 5);
+        }while(op != 5);
 }
 
 int main() {
