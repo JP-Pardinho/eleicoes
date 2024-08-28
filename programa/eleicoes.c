@@ -16,13 +16,13 @@ int alocaVetPartidos(int tam){
     Será exibida uma mensagem de erro, caso a alocação seja mal sucedida e retorna 
     o ponteiro *vetPartido*/
     int *vetPartido = NULL;
-    vetPartido = (int*)malloc(tam*sizeof(int));
+    vetPartido = (int*)malloc(tam* sizeof(int));
 
     if (vetPartido == NULL){
         printf("Erro: alocação mal sucedida");
         exit(1);
     }
-    return *vetPartido;
+    return vetPartido;
 }
 
 typedef struct{
@@ -45,7 +45,7 @@ int alocaVetCandidatos(int tam){
         exit(1);
 
     }
-    return *vetCandidato;
+    return vetCandidato;
 }
 
 typedef struct{
@@ -66,18 +66,25 @@ int alocaVetFederacao(int tam){
         exit(1);
 
     }
-    return *vetFederacao;
+    return vetFederacao;
 }
 
 //-------------------------------------------------------------------------//
 
 // CADASTROS / REGISTROS //
 // Criar mais um função para cadastrar partido, verificar(ok), inserir(ok)
-void cadastrarPartido(int pos, partidos*P){
+void cadastrarPartido(int pos, partidos*P, int *tam){
     printf("Digite o nome do partido: ");
     scanf("%s", P[pos].nomePrtd);
     printf("Digite a sigla do partido: ");
     scanf("%s", P[pos].siglaPrtd);
+    
+    if(!verificaExistenciaPartido(P,tam,P[pos].nomePrtd)){
+        printf("Partido inserido\n");
+        (*tam++);
+    }else{
+        printf("Este Partido já existe");
+    }
 }
 void inserirPartido(partidos*P, char* nomePrtd, int tam, int pos){
     if(verificaExistenciaPartido(P,tam,nomePrtd)){
@@ -281,6 +288,8 @@ void menu(){
     int continuar = 1;
     int contador = 0;
     int op, voto;
+    int pos;
+    partidos* P = NULL;
 
     printf("\n");
     printf("___________________________________\n");
@@ -308,6 +317,7 @@ void menu(){
         // Inicia a etapa de cadastros
 
         if(op == 1){
+            pos = contador;
             // Cadastrando partidos
                 printf("___________________________________\n");
                 printf("|                                 |\n");
@@ -318,7 +328,7 @@ void menu(){
             while (continuar){
                 printf("Cadastrando o %dº partido\n", contador + 1);
                 contador++;
-                // inserirPartido(); 
+                cadastrarPartido(pos,P, &contador);
                 printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
                 continuar = obterInteiro();
             }
