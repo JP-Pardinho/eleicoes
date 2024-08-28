@@ -86,6 +86,7 @@ void cadastrarPartido(int pos, partidos*P, int *tam){
         printf("Este Partido já existe");
     }
 }
+//Talvez seja não seja necessário;
 void inserirPartido(partidos*P, char* nomePrtd, int tam, int pos){
     if(verificaExistenciaPartido(P,tam,nomePrtd)){
         printf("Este partido já existe!\n");
@@ -226,18 +227,19 @@ int verificaCandidato (candidato*C, int numero, int tam){
         if(C[i].num_canditados == numero){
             return 1; // Numero de condidato existe 
         }
-        return 0; // Numero de candidato não existe
     }
+    return 0; // Numero de candidato não existe
 }
 
 // Tentar simplificar ou unir as duas verificações
 void imprimeNomeCandidato (candidato*C, int numero, int tam){
     int i;
     for(i=0; i<tam; i++){
-        if(C[i].num_canditados == numero){
-            printf("%s", C[i].nomeCandidato);
+        if(verificaCandidato(C,numero, tam)){
+            printf("%s\n", C[i].nomeCandidato);
         }
     }
+    printf("Numero de candidato não existe\n");
 }
 
 
@@ -290,6 +292,8 @@ void menu(){
     int op, voto;
     int pos;
     partidos* P = NULL;
+    candidato* C = NULL;
+    federacao* F = NULL;
 
     printf("\n");
     printf("___________________________________\n");
