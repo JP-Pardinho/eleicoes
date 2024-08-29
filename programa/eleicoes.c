@@ -17,7 +17,7 @@ partidos* alocaVetPartidos(int tam){
     o ponteiro *vetPartido*/
     partidos *vetPartido = (partidos*)malloc(tam* sizeof(partidos));
     if (vetPartido == NULL){
-        printf("Erro: alocação mal sucedida");
+        printf("Erro: alocação mal sucedida!");
         exit(1);
     }
     return vetPartido;
@@ -38,7 +38,7 @@ candidato* alocaVetCandidatos(int tam){
     o ponteiro *vetCandidato*/
     candidato *vetCandidato = (candidato*)malloc(tam*sizeof(candidato));
     if (vetCandidato == NULL){
-        printf("Erro: alocação mal sucedida");
+        printf("Erro: alocação mal sucedida!");
         exit(1);
 
     }
@@ -60,7 +60,7 @@ int alocaVetFederacao(int tam){
     vetFederacao = (int*)malloc(tam*sizeof(int));
 
     if (vetFederacao == NULL){
-        printf("Erro: alocação mal sucedida");
+        printf("Erro: alocação mal sucedida!");
         exit(1);
 
     }
@@ -107,7 +107,7 @@ int letras(char *soLetra){
 }
 
 
-char verificaNumeroCandidato(char* numCandidato){
+char verificaNumeroCandidato(){
     int tam;
     int verifica = 0;
     char numCandidato[5];
@@ -125,11 +125,11 @@ char verificaNumeroCandidato(char* numCandidato){
             if(verifica == 5){
                 return *numCandidato;
             }else{
-                printf("Numero do Candidato invalido, digite apenas numeros!\n");
+                printf("Número do Candidato inválido, digite apenas numeros!\n");
             }
         }
         else{
-            printf("Numero do Candidato invalido, digite apenas numeros!\n");
+            printf("Número do Candidato inválido, digite apenas numeros!\n");
         }
     }while(verifica != 5);
 }
@@ -228,7 +228,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador){
         return;
     }
     if(!letras(nomeCandidato)){
-        printf("O nome do Candidato deve conter apenas letras!n");
+        printf("O nome do candidato deve conter apenas letras!\n");
         return;
     }
     if(!verificaNumeroCandidato(numCandidato)){
@@ -318,7 +318,7 @@ void imprimeNomeCandidato (candidato*C, int numero, int tam){
             printf("%s\n", C[i].nomeCandidato);
         }
     }
-    printf("Numero de candidato não existe\n");
+    printf("Número de candidato não existe!\n");
 }
 
 /*
@@ -426,7 +426,7 @@ void menu(){
                         exit(1);
                     }
                 }
-                printf("Cadastrando o %dº partido\n", contadorPartidos + 1);
+                printf("Cadastrando o %dº partido!\n", contadorPartidos + 1);
                 cadastrarPartido(P, &contadorPartidos);
                 printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
                 continuar = obterInteiro();
@@ -453,7 +453,7 @@ void menu(){
                         exit(1);
                     }
                 }
-                printf("Cadastrando o %dº candidato\n", contadorCandidatos + 1);
+                printf("Cadastrando o %dº candidato!\n", contadorCandidatos + 1);
                 contadorCandidatos++;
                 //cadastrarCandidato();
                 printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
@@ -482,7 +482,7 @@ void menu(){
                         exit(1);
                     }
                 }
-                printf("Cadastrando a %dª federação\n", contadorFederacao +1);
+                printf("Cadastrando a %dª federação!\n", contadorFederacao +1);
                 contadorFederacao++;
                 //registrarFederacao();
                 printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
@@ -534,7 +534,7 @@ void menu(){
             // }
         }
         }while(op != 5);
-
+            printf("Finalizando...");
         free(P); // Limpa a memória
 }
 
