@@ -163,10 +163,9 @@ void cadastrarPartido(partidos*P, int *contador){
     int existePartido, existeSigla;
     
 
-    printf("Digite o nome do partido: \n");
+    printf("Digite o nome do partido: ");
     scanf("%s", nome);
-    printf("\n");
-    printf("Digite a sigla do partido: \n");
+    printf("Digite a sigla do partido: ");
     scanf("%s", sigla);
     printf("\n");
 
@@ -255,7 +254,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
             printf("ERRO: Este partido não está cadastrado!\n");
         }
         if(existeNome){
-            printf("ERRO: Este nome já está cadastrado!");
+            printf("ERRO: Este nome já está cadastrado!\n");
         }
         if(existeNumCandidato){
             printf("ERRO: Este número pertence a outro candidato!\n");
@@ -292,12 +291,15 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
     candidato* candidatoEscolhido = NULL;
 
     while (continuar) {
-        printf("=================================\n");
-        printf("=        Menu de Votação        =\n");
-        printf("=       1) Registrar Voto       =\n");
-        printf("=       2) Encerrar Votação     =\n");
-        printf("=================================\n");    
+        printf("____________________________________\n");
+        printf("|                                  |\n");
+        printf("|          Menu de Votação         |\n");
+        printf("|                                  |\n");
+        printf("|        1) Registrar Voto         |\n");
+        printf("|        2) Encerrar Votação       |\n");
+        printf("|__________________________________|\n");
         printf("Digite uma opção: ");
+
         opcao = obterInteiro();
 
         if (opcao == 1) {  // Registrar voto
@@ -319,11 +321,12 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
             }
 
             // Menu de confirmação
-            printf("=================================\n");
-            printf("=       1) Confirmar Voto       =\n");
-            printf("=       2) Retornar             =\n");
-            printf("=       3) Votar em Branco      =\n");
-            printf("=================================\n");
+            printf("____________________________________\n");
+            printf("|                                  |\n");
+            printf("|       1) Confirmar Voto          |\n");
+            printf("|       2) Retornar                |\n");
+            printf("|       3) Votar em Branco         |\n");
+            printf("|__________________________________|\n");
             printf("Digite uma opção: ");
             votoConfirmado = obterInteiro();
 
