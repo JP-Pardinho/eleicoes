@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>>
 
 // STRUCTS E ALOCAÇÃO DE MEMÓRIA //
 typedef struct{
@@ -84,6 +85,28 @@ int verificaExistenciaPartido(partidos*P, int tam, char* nome){
     }
     return 0; // Partido não encontrato
 }
+int verificaSiglaPrtd(partidos*P, int tam, char* nome){
+    int i;
+    for(i=0; i<tam; i++){
+        if(strcmp(P[i].siglaPrtd, nome) == 0){
+            return 1; //Sigla encontrada
+        }
+    }
+    return 0; //Sigla não encontrada
+}
+
+int letras(char *soLetra){
+    /*Função é utilizada para verificar a entrada do usuário é apenas letra.
+    É utilizado na função cadastrarPartidos, ....., para que não haja número no nome e na sigla.
+    A função retorna zero, se não tem apenas letra, caso contrário retorna 1*/
+    int i;
+    for(i=0; soLetra != '\0'; i++){
+        if(!isalpha((unsigned char)soLetra[i])){
+            return 0; //erro
+        }
+    }
+    return 1; // só letra
+}
 
 
 char verificaNumeroCandidato(){
@@ -116,23 +139,41 @@ char verificaNumeroCandidato(){
 
 void cadastrarPartido(partidos*P, int *contador){
     char nome[50];
-    int existe;
+    char sigla[10];
+    int existePartido, existeSigla;
+    
 
     printf("Digite o nome do partido: \n");
     scanf("%s", nome);
     printf("\n");
     printf("Digite a sigla do partido: \n");
-    scanf("%s", P[*contador].siglaPrtd);
+    scanf("%s", sigla);
     printf("\n");
 
-    existe = verificaExistenciaPartido(P, *contador, nome);
+    if(!letras(nome)){
+        printf("O nome do partido deve conter apenas letras!\n");
+        return;
+    }
+    if (!letras(sigla)){
+        printf("A sigla deve conter apenas letras!\n");
+        return;
+    }
 
-    if(!existe){
+    existePartido = verificaExistenciaPartido(P, *contador, nome);
+    existeSigla = verificaSiglaPrtd(P,*contador, sigla);
+
+    if(!existePartido && !existeSigla){
         strcpy(P[*contador].nomePrtd, nome);
-        printf("Partido inserido!\n");
+        strcpy(P[*contador].siglaPrtd, sigla);
+        printf("Partido e sigla inserido!\n");
         (*contador)++; //Incrementa o contador direto na main
     } else{
-        printf("Este Partido ja existe\n");
+        if(existePartido){
+            printf("Este partido já existe\n");
+        }
+        if(existeSigla){
+            printf("Esta sigla já existe\n");
+        }
     }
 }
 
@@ -437,6 +478,8 @@ void menu(){
             // }
         }
         }while(op != 5);
+
+        free(P); // Limpa a memória
 }
 
 int main() {
