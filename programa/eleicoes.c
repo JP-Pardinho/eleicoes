@@ -336,6 +336,9 @@ void menu(){
     C = alocaVetCandidatos(tamCandidatos);
     //Federação//
     federacao* F = NULL;
+    int contadorFederacao = 0;
+    int tamFederacao = 10;
+    F = alocaVetFederacao(tamFederacao);
 
     printf("\n");
     printf("___________________________________\n");
@@ -418,7 +421,7 @@ void menu(){
             //Cadastrando Federações
 
             continuar = 1;
-            contador = 0;
+            contadorFederacao = 0;
 
             printf("___________________________________\n");
             printf("|                                 |\n");
@@ -427,8 +430,16 @@ void menu(){
             printf("\n");
 
             while (continuar){
-                printf("Cadastrando a %dª federação\n", contador +1);
-                contador++;
+                if(tamFederacao >= tamFederacao){
+                    tamFederacao *= 2;
+                    F = realloc(F,tamFederacao* sizeof(federacao));
+                    if(F == NULL){
+                        printf("Alocação mal sucedida!\n");
+                        exit(1);
+                    }
+                }
+                printf("Cadastrando a %dª federação\n", contadorFederacao +1);
+                contadorFederacao++;
                 //registrarFederacao();
                 printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
                 continuar = obterInteiro();
