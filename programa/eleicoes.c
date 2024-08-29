@@ -535,6 +535,14 @@ void menu(){
 
         else if(op == 4){
             //Inicia processo de votação
+
+            printf("\n");
+            printf("___________________________________\n");
+            printf("|                                 |\n");
+            printf("|      Cadastro de Federações     |\n");
+            printf("|_________________________________|\n\n");
+            printf("\n");
+
             iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos);
         }
     }while(op != 5);
@@ -546,10 +554,6 @@ int main() {
 
     // Criar variaveis contadoras para Votos Nulos, Votos Validos, Votos em Branco
     menu();
-
-
-
-
 
     return 0;
 }
