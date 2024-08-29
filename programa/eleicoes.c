@@ -108,6 +108,8 @@ int letras(char *soLetra){
 int verificaNumeroCandidato(char* numCandidato){
     int i;
     int tam = strlen(numCandidato);
+    int ch;
+
     if(tam != 5){
         return 0; // Tem menos ou mais que 5 dígitos
     }
@@ -116,6 +118,7 @@ int verificaNumeroCandidato(char* numCandidato){
             return 0; // Não são apenas números 
         }
     }
+    while ((ch = getchar()) != '\n' && ch != EOF);
     return 1; //pode
 }
 
@@ -230,7 +233,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
         return;
     }
     if(!verificaNumeroCandidato(numCandidato)){
-        printf("O número do candidato deve conter somente 5 dígitos númericos!\n");
+        printf("Número do candidato inválido! Faça novamente o cadastro...\n");
         return;
     }
 
@@ -244,11 +247,12 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
                 partidoFiliado = &P[i];
                 break;
             }
-        }if(partidoFiliado != NULL){
-        strcpy(C[*contador].nomeCandidato, nomeCandidato);
-        C[*contador].idade = idadeCandidato;
-        strcpy(C[*contador].num_canditados, numCandidato);
-        (*contador)++;
+        }
+        if(partidoFiliado != NULL){
+            strcpy(C[*contador].nomeCandidato, nomeCandidato);
+            C[*contador].idade = idadeCandidato;
+            strcpy(C[*contador].num_canditados, numCandidato);
+            (*contador)++;
         }
     } else{
         if(!existePartido){
@@ -288,7 +292,7 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
     /* FAZER  O DOCSTRING */
     int continuar = 1;
     int opcao, votoConfirmado = 0;
-    char strCandidato[6]; // 5 digitos + '\0'
+    char numCandidato[6]; // 5 dígitos + '\0'
     candidato* candidatoEscolhido = NULL;
 
     while (continuar) {
@@ -305,11 +309,11 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
 
         if (opcao == 1) {  // Registrar voto
             printf("Digite o número do candidato (5 dígitos): ");
-            scanf("%s", strCandidato);
+            scanf("%s", numCandidato);
             candidatoEscolhido = NULL;
 
             for (int i = 0; i < *numCandidatos; i++) {
-                if (strcmp(C[i].num_canditados, strCandidato) == 0) {
+                if (strcmp(C[i].num_canditados, numCandidato) == 0) {
                     candidatoEscolhido = &C[i];
                     break;
                 }
@@ -353,6 +357,7 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
         }
     }
 }
+
 
 
 // Tentar simplificar ou unir as duas verificações
@@ -448,20 +453,21 @@ void menu(){
         printf("|     4 - Iniciar Votação       |\n");
         printf("|     5 - Sair                  |\n");
         printf("|_______________________________|\n");
-        printf("Digite uma opção => \n");
+        printf("Digite uma opção => ");
 
-        
         op = obterInteiro();
 
         // Inicia a etapa de cadastros
 
         if(op == 1){
             // Cadastrando partidos
-                printf("___________________________________\n");
-                printf("|                                 |\n");
-                printf("|       Cadastro de Partidos      |\n");
-                printf("|_________________________________|\n\n");
-                printf("\n");
+            printf("___________________________________\n");
+            printf("|                                 |\n");
+            printf("|       Cadastro de Partidos      |\n");
+            printf("|_________________________________|\n\n");
+            printf("\n");
+
+            continuar = 1;
 
             while (continuar){
                 if(contadorPartidos >= tamPartidos){
@@ -481,14 +487,13 @@ void menu(){
 
         else if(op == 2){
             //Cadastrando Candidatos
-            continuar   = 1;
-            contadorCandidatos = 0;
-
             printf("___________________________________\n");
             printf("|                                 |\n");
             printf("|      Cadastro de Candidatos     |\n");
             printf("|_________________________________|\n");
             printf("\n");
+
+            continuar   = 1;
 
             while (continuar){
                 if(contadorCandidatos >= tamCandidatos){
@@ -500,6 +505,7 @@ void menu(){
                     }
                 }
                 printf("Cadastrando o %dº candidato\n", contadorCandidatos + 1);
+                contadorCandidatos++;
                 cadastrarCandidato(C, P, &contadorCandidatos, contadorPartidos);
                 printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
                 continuar = obterInteiro();
@@ -508,15 +514,13 @@ void menu(){
 
         else if(op == 3){
             //Cadastrando Federações
-
-            continuar = 1;
-            contadorFederacao = 0;
-
             printf("___________________________________\n");
             printf("|                                 |\n");
             printf("|      Cadastro de Federações     |\n");
             printf("|_________________________________|\n\n");
             printf("\n");
+
+            continuar = 1;
 
             while (continuar){
                 if(contadorFederacao >= tamFederacao){
