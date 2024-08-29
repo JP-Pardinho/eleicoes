@@ -246,12 +246,10 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
                 break;
             }
         }
-        if(partidoFiliado != NULL){
         strcpy(C[*contador].nomeCandidato, nomeCandidato);
         C[*contador].idade = idadeCandidato;
         strcpy(C[*contador].num_canditados, numCandidato);
         (*contador)++;
-        }
     } else{
         if(!existePartido){
             printf("ERRO: Este partido não está cadastrado!\n");
@@ -286,37 +284,81 @@ int verificaExisFederacao(federacao*F, int tam, char* nome){
     return 0; //Federacao não encontrada
 }
 
-/*
-void registraVoto(candidato*C, int numero, int tam){
+void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos) {
+    /* FAZER  O DOCSTRING */
+    int continuar = 1;
+    int opcao, votoConfirmado = 0;
+    char numCandidato[6]; // 5 dígitos + '\0'
+    candidato* candidatoEscolhido = NULL;
 
-        Alterar informações no registra voto...
-        - Temos que receber um string, verificar se todos os digitos digitados, são numeros inteiros, depois verificar se o numero pertence a um candidato
-        - Se o verificaCandidato() retornar que existe, chamar a função menuConfirmação(), para armazenar voto++, em voto_valido, voto_nulo, voto_branco e voto(dentro da struct do candidato)
-    
-    int i;
-    char numCandidato[5];
+    while (continuar) {
+        printf("=================================\n");
+        printf("=        Menu de Votação        =\n");
+        printf("=       1) Registrar Voto       =\n");
+        printf("=       2) Encerrar Votação     =\n");
+        printf("=================================\n");    
+        printf("Digite uma opção: ");
+        opcao = obterInteiro();
 
-    printf("Digite o número do candidato (5 digitos): ");
-    scanf("%s", numCandidato);
+        if (opcao == 1) {  // Registrar voto
+            printf("Digite o número do candidato (5 dígitos): ");
+            scanf("%s", numCandidato);
+            candidatoEscolhido = NULL;
 
-    for(i=0; i<tam; i++){
-        if (C[i].num_canditados == numCandidato){
-            printf("%s", C[i].nomeCandidato);
-        } else{
-            printf("VOTO NULO");
+            for (int i = 0; i < numCandidatos; i++) {
+                if (strcmp(C[i].num_canditados, numCandidato) == 0) {
+                    candidatoEscolhido = &C[i];
+                    break;
+                }
+            }
+
+            if (candidatoEscolhido) {
+                printf("Candidato: %s\n", candidatoEscolhido->nomeCandidato);
+            } else {
+                printf("VOTO NULO\n");
+            }
+
+            // Menu de confirmação
+            printf("=================================\n");
+            printf("=       1) Confirmar Voto       =\n");
+            printf("=       2) Retornar             =\n");
+            printf("=       3) Votar em Branco      =\n");
+            printf("=================================\n");
+            printf("Digite uma opção: ");
+            votoConfirmado = obterInteiro();
+
+            if (votoConfirmado == 1) {  // Confirmar voto
+                if (candidatoEscolhido) {
+                    candidatoEscolhido->voto++;
+                    (*votosValidos)++;
+                    printf("Voto registrado para %s\n", candidatoEscolhido->nomeCandidato);
+                } else {
+                    (*votosNulos)++;
+                    printf("Voto Nulo registrado.\n");
+                }
+            } else if (votoConfirmado == 3) {  // Votar em branco
+                (*votosBranco)++;
+                printf("Voto em Branco registrado.\n");
+            }
+            // Retornar não faz nada, apenas volta ao menu de votação
+        } else if (opcao == 2) {  // Encerrar votação
+            continuar = 0;
+            printf("Votação encerrada.\n");
+        } else {
+            printf("Opção inválida. Por favor, escolha novamente.\n");
         }
     }
 }
-*/
+
+
 
 
 
 // Tentar simplificar ou unir as duas verificações
 /*void imprimeNomeCandidato (candidato*C, int tam, char* nomeCandidato){
     int i;
-    int encontrado = 0;
     for(i=0; i<tam; i++){
-        if(verificaNomeCandidato(C,tam, tam)){
+        if(verificaCandidato(C,numero, tam)){
             printf("%s\n", C[i].nomeCandidato);
         }
     }
@@ -370,7 +412,8 @@ void menu(){
     // Criar contadores para cada opção!! 
     int continuar = 1;
     int contadorPartidos = 0;
-    int op, voto;
+    int op;
+    int votosValidos = 0, votosNulos = 0, votosBranco = 0;
     //Partidos//
     partidos* P = NULL;
     int tamPartidos = 10;
@@ -494,58 +537,25 @@ void menu(){
 
         else if(op == 4){
             //Inicia processo de votação
-            continuar = 1;
-            printf("Ok!\n");
 
-            // while (continuar){
-                
-            //     // Inicio Menu de Votação 
-            //     // printf("=================================\n");
-            //     // printf("=        Menu de Votação        =\n");
-            //     // printf("=       1) Registrar Voto       =\n");
-            //     // printf("=       2) Encerrar Votação     =\n");
-            //     // printf("=================================\n");    
-            //     // printf("\n");
+            printf("\n");
+            printf("____________________________________\n");
+            printf("|                                  |\n");
+            printf("|       Iniciando Votação...       |\n");
+            printf("|__________________________________|\n\n");
+            printf("\n");
 
-            //     op = obterInteiro();
-
-            //     // FAZER MENU DE CONFIRMAÇÃO DE VOTO, RETORNAR E VOTO EM BRANCO
-
-            //     if (op == 1){
-            //         /*
-            //             Registrar numeração num vetor de tamanho n, depois esse n vai ser parametro para a função verifica candidato 
-            //         */
-
-            //        //chamafuncao()
-
-
-
-            //         // printf("Digite o numero do candidato (5 Digitos): \n");
-            //         // voto = obterInteiro();
-            //         // if (){
-            //         //     // comparar com numero dos candidatos existentes
-            //         // }
-            //         // else if ()
-            //     }
-            //     else if (op == 2){
-            //         return 0;
-            //     }
-            //     */
-
-            // }
+            iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos);
         }
-        }while(op != 5);
-            printf("Finalizando...");
-        free(P); // Limpa a memória
+    }while(op != 5);
+        printf("Finalizando...");
+    free(P); // Limpa a memória
 }
 
 int main() {
 
     // Criar variaveis contadoras para Votos Nulos, Votos Validos, Votos em Branco
     menu();
-
-
-
 
     return 0;
 }
@@ -574,3 +584,4 @@ int main() {
 
     return 0;
 }*/
+//XEBIU
