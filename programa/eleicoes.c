@@ -107,7 +107,7 @@ int letras(char *soLetra){
 }
 
 
-char verificaNumeroCandidato(){
+char verificaNumeroCandidato(char* numCandidato){
     int tam;
     int verifica = 0;
     char numCandidato[5];
@@ -134,6 +134,15 @@ char verificaNumeroCandidato(){
     }while(verifica != 5);
 }
 
+int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
+    int i;
+    for(i=0; i<tam; i++){
+        if(strcmp(C[i].nomeCandidato, nomeC) == 0){
+            return 1; //Candidato encontrado
+        }
+    }
+    return 0; //Candidado não encontrado
+}
 
 int obterInteiro(){
     int valor;
@@ -192,10 +201,12 @@ void cadastrarPartido(partidos*P, int *contador){
     }
 }
 
-void cadastrarCandidato(candidato*C, int pos){
+void cadastrarCandidato(candidato*C, partidos*P, int *contador){
     char nomeCandidato[50];
-    char numCandidato[5];
+    char numCandidato[6];
     char partido[50];
+    int idadeCandidato;
+    int existePartido, existeNome;
     /*Verificar se o candidato já existe(nome composto(fgets)), se o numero já exite, se o partido que 
     ele quer participar existe*/
     
@@ -204,10 +215,38 @@ void cadastrarCandidato(candidato*C, int pos){
     printf("Nome Completo: ");
     scanf("%s", nomeCandidato);
     printf("Idade: ");
-    scanf("%d", &(C[pos].idade));
-    C[pos].idade = obterInteiro(); //Podemos terntar usar a função letras no lugar
-    printf("Numero de eleitor: ");
-    scanf("%s", numCandidato);
+    scanf("%d", idadeCandidato);
+    idadeCandidato = obterInteiro();
+    printf("Numero de eleitor (5 dígitos): ");
+    verificaNumeroCandidato(numCandidato);
+
+    if(!letras(partido)){
+        printf("O nome do partido deve conter apenas letras!\n");
+        return;
+    }
+    if(!letras(nomeCandidato)){
+        printf("O nome do Candidato deve conter apenas letras!n");
+        return;
+    }
+    existePartido = verificaExistenciaPartido(P,*contador,partido);
+    existeNome = verificaNomeCandidato(C, *contador, nomeCandidato);
+
+    if(existePartido && !existeNome){
+        strcpy(C[*contador].filiacao.nomePrtd, partido);
+        strcpy(C[*contador].nomeCandidato, nomeCandidato);
+        C[*contador].idade = idadeCandidato;
+        strcpy(C[*contador].num_canditados, numCandidato);
+        (*contador)++;
+    } else{
+        if(!existePartido){
+            printf("ERRO: Este partido não está cadastrado!\n");
+        }
+        if(existeNome){
+            printf("ERRO: Este nome já está cadastrado");
+        }
+    }
+
+    
 }
 
 
