@@ -211,11 +211,13 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador){
     ele quer participar existe*/
     
     printf("Partido Filiado: ");
-    scanf("%s", partido);
+    fgets(partido, sizeof(partido), stdin);
+    partido[strcspn(partido, "\n")] = '\0'; //Remove caracter de Nova linha
+
     printf("Nome Completo: ");
-    scanf("%s", nomeCandidato);
+    fgets(nomeCandidato, sizeof(nomeCandidato), stdin);
+    nomeCandidato[strcspn(nomeCandidato, "\n")] = '\0'; //Remove caracter de Nova linha
     printf("Idade: ");
-    scanf("%d", idadeCandidato);
     idadeCandidato = obterInteiro();
     printf("Numero de eleitor (5 dígitos): ");
     verificaNumeroCandidato(numCandidato);
@@ -228,6 +230,11 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador){
         printf("O nome do Candidato deve conter apenas letras!n");
         return;
     }
+    if(!verificaNumeroCandidato(numCandidato)){
+        printf("O número do candidato deve conter 5 dígitos númericos!\n");
+        return;
+    }
+
     existePartido = verificaExistenciaPartido(P,*contador,partido);
     existeNome = verificaNomeCandidato(C, *contador, nomeCandidato);
 
@@ -245,10 +252,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador){
             printf("ERRO: Este nome já está cadastrado");
         }
     }
-
-    
 }
-
 
 void registrarFederacao(federacao*F, int pos){
     printf("Digite o nome da Federacao: ");
