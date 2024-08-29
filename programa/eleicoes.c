@@ -537,10 +537,10 @@ void menu(){
             //Inicia processo de votação
 
             printf("\n");
-            printf("___________________________________\n");
-            printf("|                                 |\n");
-            printf("|      Cadastro de Federações     |\n");
-            printf("|_________________________________|\n\n");
+            printf("____________________________________\n");
+            printf("|                                  |\n");
+            printf("|       Iniciando Votação...       |\n");
+            printf("|__________________________________|\n\n");
             printf("\n");
 
             iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos);
