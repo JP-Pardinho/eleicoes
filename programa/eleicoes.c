@@ -107,39 +107,31 @@ int letras(char *soLetra){
 }
 
 
-<<<<<<< Updated upstream
 char verificaNumeroCandidato(char* numCandidato){
-=======
-void verificaNumeroCandidato(char *numCandidato) {
->>>>>>> Stashed changes
     int tam;
-    int verifica;
-
-    while (1) {
-        verifica = 1; // Assume que a entrada está correta até que se prove o contrário
+    int verifica = 0;
+    char numCandidato[5];
+    do{
+        verifica = 0;
         scanf("%s", numCandidato);
         tam = strlen(numCandidato);
+        if(tam == 5){
+            for(int i=0; i<5; i++){
+                if(numCandidato[i] >= '0' && numCandidato[i] <= '9'){
+                    verifica += 1;
+                }
+            }
 
-        // Verifica se a string tem exatamente 5 caracteres
-        if (tam != 5) {
-            printf("Número do Candidato inválido, digite exatamente 5 dígitos!\n");
-            continue;
-        }
-
-        // Verifica se todos os caracteres são dígitos
-        for (int i = 0; i < 5; i++) {
-            if (!isdigit((unsigned char)numCandidato[i])) {
-                verifica = 0;
-                break;
+            if(verifica == 5){
+                return *numCandidato;
+            }else{
+                printf("Numero do Candidato invalido, digite apenas numeros!\n");
             }
         }
-
-        if (verifica) {
-            return; // A entrada é válida, sair da função
-        } else {
-            printf("Número do Candidato inválido, digite apenas números!\n");
+        else{
+            printf("Numero do Candidato invalido, digite apenas numeros!\n");
         }
-    }
+    }while(verifica != 5);
 }
 
 int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
@@ -225,8 +217,8 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador){
     printf("Nome Completo: ");
     fgets(nomeCandidato, sizeof(nomeCandidato), stdin);
     nomeCandidato[strcspn(nomeCandidato, "\n")] = '\0'; //Remove caracter de Nova linha
+    
     printf("Idade: ");
-    scanf("%d", idadeCandidato);
     idadeCandidato = obterInteiro();
     printf("Numero de eleitor (5 dígitos): ");
     verificaNumeroCandidato(numCandidato);
@@ -258,17 +250,15 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador){
             printf("ERRO: Este partido não está cadastrado!\n");
         }
         if(existeNome){
-            printf("ERRO: Este nome já está cadastrado");
+            printf("ERRO: Este nome já está cadastrado!");
         }
     }
-
-    
 }
 
 void registrarFederacao(federacao*F, int pos){
-    printf("Digite o nome da Federação: ");
+    printf("Digite o nome da Federacao: ");
     scanf("%s", F[pos].nomeFederacao);
-    printf("Digite a sigla da Federação: ");
+    printf("Digite a sigla da Federacao: ");
     scanf("%s", F[pos].siglaFederacao);
 }
 
@@ -328,7 +318,7 @@ void imprimeNomeCandidato (candidato*C, int numero, int tam){
             printf("%s\n", C[i].nomeCandidato);
         }
     }
-    printf("Numero de candidato não existe!\n");
+    printf("Numero de candidato não existe\n");
 }
 
 /*
