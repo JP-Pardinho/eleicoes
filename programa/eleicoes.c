@@ -141,11 +141,13 @@ int numCandidatoExiste (candidato*C, char *numCandidato, int tam){
 int obterInteiro(){
     int valor;
     int resultado;
+    char ch;
 
     while(1){
         resultado = scanf("%d", &valor);
         
         if (resultado == 1){
+            while((ch = getchar()) != '\n' && ch != EOF);
             return valor;
         }
         else{
@@ -201,7 +203,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     char partido[50];
     int idadeCandidato;
     int existePartido, existeNome, existeNumCandidato;
-    partidos* partidoFiliado = NULL;
+    partidos *partidoFiliado = NULL;
     /*Verificar se o candidato já existe(nome composto(fgets)), se o numero já exite, se o partido que 
     ele quer participar existe*/
     
@@ -213,10 +215,10 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     fgets(nomeCandidato, sizeof(nomeCandidato), stdin);
     nomeCandidato[strcspn(nomeCandidato, "\n")] = '\0'; //Remove caracter de Nova linha
     
-    printf("Idade: ");
+    printf("Idade:");
     idadeCandidato = obterInteiro();
 
-    printf("Numero de eleitor (5 dígitos): ");
+    printf("Numero de eleitor (5 dígitos):");
     fgets(numCandidato, sizeof(numCandidato), stdin);
     numCandidato[strcspn(numCandidato, "\n")] = '\0';
 
@@ -310,7 +312,7 @@ void registraVoto(candidato*C, int numero, int tam){
 
 
 // Tentar simplificar ou unir as duas verificações
-void imprimeNomeCandidato (candidato*C, int tam, char* nomeCandidato){
+/*void imprimeNomeCandidato (candidato*C, int tam, char* nomeCandidato){
     int i;
     int encontrado = 0;
     for(i=0; i<tam; i++){
@@ -319,7 +321,7 @@ void imprimeNomeCandidato (candidato*C, int tam, char* nomeCandidato){
         }
     }
     printf("Número de candidato não existe!\n");
-}
+}*/
 
 /*
 void secao1(int votos, int votosValido, int votosNulo, int votosBranco, int q_eleitoral){
