@@ -244,10 +244,12 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
                 break;
             }
         }
+        if(partidoFiliado != NULL){
         strcpy(C[*contador].nomeCandidato, nomeCandidato);
         C[*contador].idade = idadeCandidato;
         strcpy(C[*contador].num_canditados, numCandidato);
         (*contador)++;
+        }
     } else{
         if(!existePartido){
             printf("ERRO: Este partido não está cadastrado!\n");
@@ -353,10 +355,11 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
 
 
 // Tentar simplificar ou unir as duas verificações
-void imprimeNomeCandidato (candidato*C, int numero, int tam){
+void imprimeNomeCandidato (candidato*C, int tam, char* nomeCandidato){
     int i;
+    int encontrado = 0;
     for(i=0; i<tam; i++){
-        if(verificaCandidato(C,numero, tam)){
+        if(verificaNomeCandidato(C,tam, tam)){
             printf("%s\n", C[i].nomeCandidato);
         }
     }
