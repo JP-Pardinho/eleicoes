@@ -244,11 +244,12 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
                 partidoFiliado = &P[i];
                 break;
             }
-        }
+        }if(partidoFiliado != NULL){
         strcpy(C[*contador].nomeCandidato, nomeCandidato);
         C[*contador].idade = idadeCandidato;
         strcpy(C[*contador].num_canditados, numCandidato);
         (*contador)++;
+        }
     } else{
         if(!existePartido){
             printf("ERRO: Este partido não está cadastrado!\n");
