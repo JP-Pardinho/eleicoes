@@ -288,7 +288,7 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
     /* FAZER  O DOCSTRING */
     int continuar = 1;
     int opcao, votoConfirmado = 0;
-    char numCandidato[6]; // 5 dígitos + '\0'
+    char strCandidato[6]; // 5 digitos + '\0'
     candidato* candidatoEscolhido = NULL;
 
     while (continuar) {
@@ -305,11 +305,11 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
 
         if (opcao == 1) {  // Registrar voto
             printf("Digite o número do candidato (5 dígitos): ");
-            scanf("%s", numCandidato);
+            scanf("%s", strCandidato);
             candidatoEscolhido = NULL;
 
-            for (int i = 0; i < numCandidatos; i++) {
-                if (strcmp(C[i].num_canditados, numCandidato) == 0) {
+            for (int i = 0; i < *numCandidatos; i++) {
+                if (strcmp(C[i].num_canditados, strCandidato) == 0) {
                     candidatoEscolhido = &C[i];
                     break;
                 }
@@ -353,9 +353,6 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
         }
     }
 }
-
-
-
 
 
 // Tentar simplificar ou unir as duas verificações
