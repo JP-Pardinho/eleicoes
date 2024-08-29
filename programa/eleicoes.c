@@ -6,23 +6,20 @@
 typedef struct{
     char nomePrtd[50];
     char siglaPrtd[10];
-    char federacao;
     // Ponteiro para vetor de candidato
 }partidos; 
 
 
-int alocaVetPartidos(int tam){
+partidos* alocaVetPartidos(int tam){
     /*Função que realiza a alocação de memória para o ponteiro dos partidos.
     Será exibida uma mensagem de erro, caso a alocação seja mal sucedida e retorna 
     o ponteiro *vetPartido*/
-    int *vetPartido = NULL;
-    vetPartido = (int*)malloc(tam* sizeof(int));
-
+    partidos *vetPartido = (partidos*)malloc(tam* sizeof(partidos));
     if (vetPartido == NULL){
         printf("Erro: alocação mal sucedida");
         exit(1);
     }
-    return *vetPartido;
+    return vetPartido;
 }
 
 typedef struct{
@@ -117,17 +114,25 @@ char verificaNumeroCandidato(){
 }
 
 
-void cadastrarPartido(int pos, partidos*P, int *tam){
-    printf("Digite o nome do partido: ");
-    scanf("%s", P[pos].nomePrtd);
-    printf("Digite a sigla do partido: ");
-    scanf("%s", P[pos].siglaPrtd);
-    
-    if(!verificaExistenciaPartido(P,*tam,P[pos].nomePrtd)){
-        printf("Partido inserido\n");
-        //(*tam++);
-    }else{
-        printf("Este Partido já existe");
+void cadastrarPartido(partidos*P, int *contador){
+    char nome[50];
+    int existe;
+
+    printf("Digite o nome do partido: \n");
+    scanf("%s", nome);
+    printf("\n");
+    printf("Digite a sigla do partido: \n");
+    scanf("%s", P[*contador].siglaPrtd);
+    printf("\n");
+
+    existe = verificaExistenciaPartido(P, *contador, nome);
+
+    if(!existe){
+        strcpy(P[*contador].nomePrtd, nome);
+        printf("Partido inserido!\n");
+        (*contador)++; //Incrementa o contador direto na main
+    } else{
+        printf("Este Partido ja existe\n");
     }
 }
 
@@ -289,8 +294,11 @@ void menu(){
     int continuar = 1;
     int contador = 0;
     int op, voto;
-    int pos;
+    //Partidos//
     partidos* P = NULL;
+    int tamPartidos = 10;
+    P = alocaVetPartidos(tamPartidos);
+    //-------//
     candidato* C = NULL;
     federacao* F = NULL;
 
@@ -320,7 +328,6 @@ void menu(){
         // Inicia a etapa de cadastros
 
         if(op == 1){
-            pos = contador;
             // Cadastrando partidos
                 printf("___________________________________\n");
                 printf("|                                 |\n");
@@ -329,9 +336,17 @@ void menu(){
                 printf("\n");
 
             while (continuar){
+                if(contador >= tamPartidos){
+                    tamPartidos *= 2;
+                    P = realloc(P, tamPartidos* sizeof(partidos));
+                    if(P ==NULL){
+                        printf("ERRO: realocação mal sucedida!\n");
+                        exit(1);
+                    }
+                }
                 printf("Cadastrando o %dº partido\n", contador + 1);
                 contador++;
-                cadastrarPartido(pos,P, &contador);
+                cadastrarPartido(P, &contador);
                 printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
                 continuar = obterInteiro();
             }
