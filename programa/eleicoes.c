@@ -74,7 +74,7 @@ int verificaExistenciaPartido(partidos*P, int tam, char* nome){
     Ela retorna 1 caso o partido exista, caso contrário, retorna 0*/
 
     int i;
-    for(i=0; i<tam; i++){
+    for(i=0; i<(tam + 1); i++){
         if(strcmp(P[i].nomePrtd, nome) == 0){
             return 1; //Partido encontrato
         } 
@@ -96,14 +96,14 @@ int letras(char *soLetra){
     É utilizado na função cadastrarPartidos, ....., para que não haja número no nome e na sigla.
     A função retorna zero, se não tem apenas letra, caso contrário retorna 1*/
     int i;
-    for(i=0; soLetra[i] != '\0'; i++){
-        if(!isalpha((unsigned char)soLetra[i])){
-            return 0; //erro
+    for (i = 0; soLetra[i] != '\0'; i++) {
+        if (!(isalpha((unsigned char)soLetra[i]) || (soLetra[i] & 0x80))) {
+            // isalpha verifica letras padrão; (soLetra[i] & 0x80) verifica se é um caractere com acento
+            return 0; // erro
         }
     }
     return 1; // só letra
 }
-
 
 int verificaNumeroCandidato(char* numCandidato){
     int i;
@@ -167,17 +167,21 @@ void cadastrarPartido(partidos*P, int *contador){
     
 
     printf("Digite o nome do partido: ");
-    scanf("%s", nome);
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0';
     printf("Digite a sigla do partido: ");
-    scanf("%s", sigla);
+    fgets(sigla, sizeof(sigla), stdin);
+    sigla[strcspn(sigla, "\n")] = '\0';
     printf("\n");
 
     if(!letras(nome)){
+        //Dando erro quando põe acentos
         printf("O nome do partido deve conter apenas letras!\n");
         return;
     }
     if (!letras(sigla)){
-        printf("A sigla deve conter apenas letras!\n");
+        //Dando erro quando põe acentos
+        printf("A sigla/ deve conter apenas letras!\n");
         return;
     }
 
@@ -226,18 +230,15 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
 
     if(!letras(partido)){
         printf("O nome do partido deve conter apenas letras!\n");
-        return;
     }
     if(!letras(nomeCandidato)){
         printf("O nome do candidato deve conter apenas letras!\n");
-        return;
     }
     if(!verificaNumeroCandidato(numCandidato)){
         printf("Número do candidato inválido! Faça novamente o cadastro...\n");
-        return;
     }
 
-    existePartido = verificaExistenciaPartido(P,*contador,partido);
+    existePartido = verificaExistenciaPartido(P,*contador, partido);
     existeNome = verificaNomeCandidato(C, *contador, nomeCandidato);
     existeNumCandidato = numCandidatoExiste(C, numCandidato, *contador);
 
@@ -288,7 +289,30 @@ int verificaExisFederacao(federacao*F, int tam, char* nome){
     return 0; //Federacao não encontrada
 }
 
-void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos) {
+void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_eleitoral){
+    // Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. 
+
+    int votos = 0;
+
+    *q_eleitoral += (*q_eleitoral + *votosValidos)/24;
+
+    votos += *votosValidos + *votosNulos + *votosBranco;
+
+    printf("Votos totais: %d\n", votos);
+    printf("Votos valídos: %d\n", *votosValidos);
+    printf("Votos brancos: %d\n", *votosBranco);
+    printf("Votos nulos: %d\n", *votosNulos);
+    printf("Quocinte eleitoral: %.2lf\n", *q_eleitoral);
+}
+void secao2(nomeCandidato){
+    /*Função responsavél por mostrar na tela uma tabela com todos os candidatos e o numero de votos que cada um teve. */
+    printf("===================================");
+    // for()
+        printf("=Candidato: %c Votos recebidos: %d=", nomeCandidato);
+    printf("===================================");
+}
+
+void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos, double q_eleitoral) {
     /* FAZER  O DOCSTRING */
     int continuar = 1;
     int opcao, votoConfirmado = 0;
@@ -351,46 +375,26 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
             // Retornar não faz nada, apenas volta ao menu de votação
         } else if (opcao == 2) {  // Encerrar votação
             continuar = 0;
-            printf("Votação encerrada.\n");
+            printf("____________________________________\n");
+            printf("|                                  |\n");
+            printf("|        Votação encerrada...      |\n");
+            printf("|__________________________________|\n");
+            printf("\n");
+
+            printf("Iniciando seção 1\n");
+            printf("Pressione enter para continuar...\n");
+            secao1(votosValidos, votosNulos, votosBranco, &q_eleitoral);
+
         } else {
             printf("Opção inválida. Por favor, escolha novamente.\n");
         }
+        // COLOCAR GETCHAR() PARA PRESSIONAR ENTER PARA CONTINUAR
     }
+
+    // Não pode voltar para o menu depois do usuario escolher a opção de numero 2 no menu de votação 
 }
-
-
-
-// Tentar simplificar ou unir as duas verificações
-/*void imprimeNomeCandidato (candidato*C, int tam, char* nomeCandidato){
-    int i;
-    for(i=0; i<tam; i++){
-        if(verificaCandidato(C,numero, tam)){
-            printf("%s\n", C[i].nomeCandidato);
-        }
-    }
-    printf("Número de candidato não existe!\n");
-}*/
 
 /*
-void secao1(int votos, int votosValido, int votosNulo, int votosBranco, int q_eleitoral){
-    Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. 
-
-    // ADICIONAR AS VARIAVÉIS DE CADA ELEMENTO
-
-    printf("Votos gerais: %d\n", votos);
-    printf("Votos valídos: %d\n", votosValido);
-    printf("Votos brancos: %d\n", votosNulo);
-    printf("Votos nulos: %d\n", votosBranco);
-    printf("Quocinte eleitoral: %d\n", q_eleitoral);
-}
-
-void secao2(nomeCandidato){
-    Função responsavél por mostrar na tela uma tabela com todos os candidatos e o numero de votos que cada um teve. 
-    printf("===================================");
-    // for()
-        printf("=Candidato: %c Votos recebidos: %d=", nomeCandidato);
-    printf("===================================");
-}
 
 void secao3(int votoPartido, int votoFederação){
     Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. 
@@ -417,12 +421,13 @@ void secao6(){
 void menu(){
     // Criar contadores para cada opção!! 
     int continuar = 1;
-    int contadorPartidos = 0;
     int op;
     int votosValidos = 0, votosNulos = 0, votosBranco = 0;
+    double q_eleitoral = 0;
     //Partidos//
     partidos* P = NULL;
     int tamPartidos = 10;
+    int contadorPartidos = 0;
     P = alocaVetPartidos(tamPartidos);
     //Candidatos//
     candidato* C = NULL;
@@ -447,11 +452,12 @@ void menu(){
         printf("_________________________________\n");
         printf("|                               |\n");
         printf("|       Menu de Cadastros:      |\n");
-        printf("|     1 - Cadastrar Partidos    |\n");
-        printf("|     2 - Cadastrar Candidatos  |\n");
-        printf("|     3 - Cadastrar Federações  |\n");
-        printf("|     4 - Iniciar Votação       |\n");
-        printf("|     5 - Sair                  |\n");
+        printf("|                               |\n");
+        printf("|    1 - Cadastrar Partidos     |\n");
+        printf("|    2 - Cadastrar Candidatos   |\n");
+        printf("|    3 - Cadastrar Federações   |\n");
+        printf("|    4 - Iniciar Votação        |\n");
+        printf("|    5 - Sair                   |\n");
         printf("|_______________________________|\n");
         printf("Digite uma opção => ");
 
@@ -480,7 +486,7 @@ void menu(){
                 }
                 printf("Cadastrando o %dº partido!\n", contadorPartidos + 1);
                 cadastrarPartido(P, &contadorPartidos);
-                printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): \n");
+                printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): ");
                 continuar = obterInteiro();
             }
         }
@@ -505,9 +511,9 @@ void menu(){
                     }
                 }
                 printf("Cadastrando o %dº candidato\n", contadorCandidatos + 1);
-                contadorCandidatos++;
                 cadastrarCandidato(C, P, &contadorCandidatos, contadorPartidos);
-                printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
+                // contadorCandidatos++;
+                printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): ");
                 continuar = obterInteiro();
             }
         }
@@ -534,7 +540,7 @@ void menu(){
                 printf("Cadastrando a %dª federação!\n", contadorFederacao +1);
                 contadorFederacao++;
                 //registrarFederacao();
-                printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): \n");
+                printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): ");
                 continuar = obterInteiro();
             }
         }
@@ -542,15 +548,28 @@ void menu(){
 
         else if(op == 4){
             //Inicia processo de votação
+            int escola;
 
+            do{
             printf("\n");
             printf("____________________________________\n");
             printf("|                                  |\n");
             printf("|       Iniciando Votação...       |\n");
-            printf("|__________________________________|\n\n");
+            printf("|                                  |\n");
+            printf("|    É aluno da escola crescer?    |\n");
+            printf("|        Sim (1) | Não (0)         |\n");
+            printf("|__________________________________|\n");
+            printf("Escolha uma opção: ");
+            escola = obterInteiro();
             printf("\n");
 
-            iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos);
+            if(escola == 0){
+                printf("Você não pode participar desse votação!\n");
+                continue;
+            }else{
+                iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos,q_eleitoral);
+            }
+            }while(escola == 0);
         }
     }while(op != 5);
         printf("Finalizando...");
