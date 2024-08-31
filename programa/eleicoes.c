@@ -382,8 +382,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
 
 // Incrementa o voto no partido ou federação correto
 void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederacao, char* siglaPartido) {
-    int idxFederacao = verificarFederacao(P, numPartidos, F, numFederacao, siglaPartido);
-
+    int idxFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
     if (idxFederacao != -1) {
         F[idxFederacao].voto++;  // Incrementa o voto na federação
     } else {
@@ -558,7 +557,7 @@ void secao6(candidato* C, int numCandidatos, double q_eleitoral) {
 
 
 
-void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos, double q_eleitoral, partidos* P, int* numPartidos, federacao* F, int* numFederacao, double q_partidario) {
+void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos, double q_eleitoral, partidos* P, int* numPartidos, federacao* F, int* numFederacao) {
     /* FAZER  O DOCSTRING */
     int continuar = 1;
     int opcao, votoConfirmado = 0;
@@ -688,7 +687,6 @@ void menu(){
     int op;
     int votosValidos = 0, votosNulos = 0, votosBranco = 0;
     double q_eleitoral = 0;
-    double q_partidario = 0;
     //Partidos//
     partidos* P = NULL;
     int tamPartidos = 10;
@@ -819,7 +817,7 @@ void menu(){
             printf("|       Iniciando Votação...       |\n");
             printf("|__________________________________|\n");
 
-            iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos, q_eleitoral, P, &contadorPartidos, F, &contadorFederacao, q_partidario);
+            iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos, q_eleitoral, P, &contadorPartidos, F, &contadorFederacao);
         }
     }while(op != 5);
         printf("Finalizando...");
