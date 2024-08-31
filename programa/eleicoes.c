@@ -253,6 +253,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
             strcpy(C[*contador].nomeCandidato, nomeCandidato);
             C[*contador].idade = idadeCandidato;
             strcpy(C[*contador].num_canditados, numCandidato);
+            C[*contador].voto = 0;
             (*contador)++;
         }
     } else{
@@ -304,13 +305,64 @@ void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_elei
     printf("Votos nulos: %d\n", *votosNulos);
     printf("Quocinte eleitoral: %.2lf\n", *q_eleitoral);
 }
-void secao2(nomeCandidato){
-    /*Função responsavél por mostrar na tela uma tabela com todos os candidatos e o numero de votos que cada um teve. */
-    printf("===================================");
-    // for()
-        printf("=Candidato: %c Votos recebidos: %d=", nomeCandidato);
-    printf("===================================");
+void secao2(candidato* C, int numCandidatos) {
+    printf("=============================================\n");
+    printf("|            Candidatos e Votos             |\n");
+    printf("=============================================\n");
+    printf("| %-30s | %-10s |\n", "Nome do Candidato", "Votos");
+    printf("=============================================\n");
+
+    for (int i = 0; i < numCandidatos; i++) {
+        printf("| %-30s | %-10d |\n", C[i].nomeCandidato, C[i].voto);
+    }
+
+    printf("=============================================\n");
 }
+
+
+/*
+void secao3(partidos* P, int numPartidos, int numFederação){
+   // Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. 
+
+     printf("=============================================\n");
+    printf("|             Partidos e Votos              |\n");
+    printf("=============================================\n");
+    printf("| %-30s | %-10s |\n", "Nome do Partido", "Votos");
+    printf("=============================================\n");
+    for (int i = 0; i < *partidos; i++) {
+        printf("| %-30s | %-10d |\n", P[i].nomePrtd, C[i].voto);
+    }
+    printf("=============================================\n");
+}
+*/
+
+/*void secao4(double* q_partidario, double* q_eleitoral){
+   // Função responsavél por mostrar na tela uma tabela informando o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. 
+    *q_partidario =  / *q_eleitoral
+}
+*/
+
+void secao5(candidato* C, int numCandidatos){
+   // Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua legenda.
+    printf("=============================================\n");
+    printf("|         Candidatos Eleitos e Legenda       |\n");
+    printf("=============================================\n");
+    printf("| %-30s | %-10s |\n", "Nome do Candidato", "Legenda");
+    printf("=============================================\n");
+    for (int i = 0; i < numCandidatos; i++) {
+        // Verificar se o candidato tem votos > 0
+        if (C[i].voto > 0) {  // Assumindo que todos com votos > 0 são considerados eleitos
+            printf("| %-30s | %-10s |\n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
+        }
+    }
+    printf("=============================================\n");
+}
+
+
+/*void secao6(){
+    //Função responsavél por mostrar na tela uma tabela com os candidatos suplentes, em ordem decrescente de quociente eleitoral. 
+}
+*/
 
 void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos, double q_eleitoral) {
     /* FAZER  O DOCSTRING */
@@ -384,6 +436,12 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
             printf("Iniciando seção 1\n");
             printf("Pressione enter para continuar...\n");
             secao1(votosValidos, votosNulos, votosBranco, &q_eleitoral);
+            printf("Iniciando seção 2\n");
+            printf("Pressione enter para continuar...\n");
+            secao2(C, *numCandidatos);
+            printf("Iniciando seção 5\n");
+            printf("Pressione enter para continuar...\n");
+            secao5(C, *numCandidatos);
 
         } else {
             printf("Opção inválida. Por favor, escolha novamente.\n");
@@ -394,36 +452,13 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
     // Não pode voltar para o menu depois do usuario escolher a opção de numero 2 no menu de votação 
 }
 
-/*
-
-void secao3(int votoPartido, int votoFederação){
-    Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. 
-
-    // for()
-        printf("Total de votos: %d");
-}
-
-void secao4(q_partidario){
-    Função responsavél por mostrar na tela uma tabela informando o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. 
-
-}
-
-void secao5(){
-    Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua legenda. 
-
-}
-
-void secao6(){
-    Função responsavél por mostrar na tela uma tabela com os candidatos suplentes, em ordem decrescente de quociente eleitoral. 
-}
-*/
-
 void menu(){
     // Criar contadores para cada opção!! 
     int continuar = 1;
     int op;
     int votosValidos = 0, votosNulos = 0, votosBranco = 0;
     double q_eleitoral = 0;
+   // double q_partidario = 0;
     //Partidos//
     partidos* P = NULL;
     int tamPartidos = 10;
@@ -567,7 +602,7 @@ void menu(){
                 printf("Você não pode participar desse votação!\n");
                 continue;
             }else{
-                iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos,q_eleitoral);
+                iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos, q_eleitoral);
             }
             }while(escola == 0);
         }
