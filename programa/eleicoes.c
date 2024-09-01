@@ -10,24 +10,8 @@ typedef struct{
     char siglaPrtd[10];
     char siglaFederacao[10];
     int voto;
-    char siglaFederacao[10];
-    int voto;
     // Ponteiro para vetor de candidato
 }partidos; 
-
-//Partido em Outra Federacao//
-int partidoEmOutraFederacao(partidos* P, int numFederacoes, char* siglaPartido){
-    int i;
-    for(i = 0; i < numFederacoes; i++){
-        if(strcmp(P[i].siglaPrtd, siglaPartido) == 0){
-            if(P[i].siglaFederacao[0] != '\0'){
-                return 1; //Tá em outra federação
-            }
-            break;
-        }
-    }
-    return 0; //Não está em outra federação
-}
 
 
 typedef struct{
@@ -378,7 +362,14 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
 
     
     printf("Digite o nome da Federacao: ");
-    scanf("%s", F[pos].nomeFederacao);
+    fgets(nomeF, sizeof(nomeF), stdin);
+    nomeF[strcspn(nomeF, "\n")] = '\0'; // Remove o \n da nova linha;
+    
+    if(verificaExisFederacao(F, *contadorFederacao, nomeF)){
+        printf("ERRO: Existe uma federação com esse nome!\n");
+        return;
+    }
+
     printf("Digite a sigla da Federacao: ");
     fgets(siglaF, sizeof(siglaF), stdin);
     siglaF[strcspn(siglaF, "\n")] = '\0'; //Remove o \n da nova linha;
@@ -441,17 +432,23 @@ void incrementarVoto(partidos* P, int numPartido, federacao* F, int numFederacao
     
     int iPartido = verificaSiglaPrtd(P, numPartido, siglaPartido);
     int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
-    if (iFederacao != -1) {
-        F[iFederacao].voto++;  // Incrementa o voto na federação
-    } else {
-        for (int i = 0; i < numPartidos; i++) {
+    printf("\n");
+    printf("chegou até aqui 1\n");
+
+    if (iPartido == 1){
+        printf("chegou até aqui 2\n");  
+        for (int i = 0; i < numPartido; i++) {
             if (strcmp(P[i].siglaPrtd, siglaPartido) == 0) {
                 P[i].voto++;  // Incrementa o voto no partido
                 break;
             }
         }
+    } else if (iFederacao == 1){
+        printf("chegou até aqui 3\n");  
+        F[iFederacao].voto++;  // Incrementa o voto na federação
+    } else {
+        printf("Deu erro!\n");
     }
-
 }
 
 
