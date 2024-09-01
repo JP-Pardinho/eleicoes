@@ -313,7 +313,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     char siglaF[10];
     char siglaPartidoInserir[50];
     int continuar = 1;
-    int numPartidosFederacao = 0;
+
 
     if(numPartidos < 2){
         printf("Não é possível cadastrar Federação! Menos de dois partidos cadastrados!\n");
@@ -340,7 +340,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     }
     
     F[*contadorFederacao].partidosNaFederacao = alocaVetPartidos(numPartidos);
-    F[*contadorFederacao].numPartidos = 0;
+    F[*contadorFederacao].numPartido = 0;
 
     printf("Quais partidos vão fazer parte desta federação: ");
     while(continuar){
@@ -349,7 +349,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
         siglaPartidoInserir[strcspn(siglaPartidoInserir, "\n")] = '\0';
         
         if (strcmp(siglaPartidoInserir, "fim") == 0){
-            if(F[*contadorFederacao].numPartidos < 2){
+            if(F[*contadorFederacao].numPartido < 2){
                 printf("ERRO: Uma federação deve conter pelo menos 2 partidos!\n");
                 return;
             }
@@ -369,7 +369,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
         for(int i = 0; i < numPartidos; i++){
             if(strcmp(P[i].siglaPrtd, siglaPartidoInserir) == 0){
                 strcpy(P[i].siglaFederacao, siglaF);
-                F[*contadorFederacao].numPartidos++;
+                F[*contadorFederacao].numPartido++;
                 break;
             }
         }
@@ -385,9 +385,10 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
 
 // Incrementa o voto no partido ou federação correto
 void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederacao, char* siglaPartido) {
-    int idxFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
-    if (idxFederacao != -1) {
-        F[idxFederacao].voto++;  // Incrementa o voto na federação
+    // Verifica se é uma federação ou partido para incrementar o voto
+    int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
+    if (iFederacao != -1) {
+        F[iFederacao].voto++;  // Incrementa o voto na federação
     } else {
         for (int i = 0; i < numPartidos; i++) {
             if (strcmp(P[i].siglaPrtd, siglaPartido) == 0) {
@@ -447,16 +448,13 @@ void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
     printf("|___________________________________________|\n");
 
     for (int j = 0; j < numFederacao; j++) {
-        if (F[j].voto > 0) {
-            printf("| %-30s | %-10d |\n", F[j].nomeFederacao, F[j].voto);
-        }
+        printf("| %-30s | %-10d |\n", F[j].nomeFederacao, F[j].voto);
     }
 
     // Imprime os votos por partido
     for (int k = 0; k < numPartidos; k++) {
-        if (P[k].voto > 0) {
-            printf("| %-30s | %-10d |\n", P[k].nomePrtd, P[k].voto);
-        }
+        printf("Debug - Partido: %s, Votos: %d\n", P[k].nomePrtd, P[k].voto); // Depuração
+        printf("| %-30s | %-10d |\n", P[k].nomePrtd, P[k].voto);
     }
     printf("|___________________________________________|\n");
 }
@@ -465,8 +463,8 @@ void secao4(partidos* P, int numPartidos, federacao* F, int numFederacao, int vo
    // Função responsavél por mostrar na tela uma tabela informando o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. 
     double quocienteEleitoral = (double)votosValidos / 24;
 
-    if (quocienteEleitoral == 0) {
-        printf("Erro: Quociente eleitoral é zero, não é possível calcular o quociente partidário.\n");
+    if (votosValidos == 0) {
+        printf("Erro: Não há votos válidos suficientes para calcular o quociente eleitoral.\n");
         return;
     }
 
@@ -502,13 +500,44 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
     printf("| %-28s | %-10s |\n", "Nome do Candidato", "Legenda");
     printf("|___________________________________________|\n");
     printf("                                             \n");
+
+    double quocienteMinimo = 0.1 * q_eleitoral;
+    int vagasDistribuidas = 0;
+
+
     for (int i = 0; i < numCandidatos; i++) {
-        double quocienteMinimo = 0.1 * q_eleitoral;
-        // Verificar se o candidato tem votos > 0
-        if (C[i].voto >= quocienteMinimo) {  // Assumindo que todos com votos > 0 são considerados eleitos
-            printf("  %-28s | %-10s \n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
+        if (C[i].voto >= quocienteMinimo) {
+            printf("| %-28s | %-10s |\n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
+            vagasDistribuidas++;
         }
     }
+
+    // Aqui verificamos se há vagas remanescentes e as distribuímos pela média
+    // Ordenar os candidatos que não foram eleitos mas têm votos > 0 por votos e idade
+    for (int i = 0; i < numCandidatos - 1; i++) {
+        for (int j = i + 1; j < numCandidatos; j++) {
+            if (C[j].voto > C[i].voto || 
+               (C[j].voto == C[i].voto && C[j].idade > C[i].idade)) {
+                candidato temp = C[i];
+                C[i] = C[j];
+                C[j] = temp;
+            }
+        }
+    }
+
+    // Considerando que o número de cadeiras seja conhecido (24 por exemplo)
+    int numCadeiras = 24;
+
+    // Distribuir as vagas remanescentes
+    int vagasRestantes = numCadeiras - vagasDistribuidas;
+    for (int i = 0; i < numCandidatos && vagasRestantes > 0; i++) {
+        if (C[i].voto < quocienteMinimo && C[i].voto > 0) {
+            printf("| %-28s | %-10s |\n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
+            vagasRestantes--;
+        }
+    }
+
+
     printf("_____________________________________________\n");
 }
 
