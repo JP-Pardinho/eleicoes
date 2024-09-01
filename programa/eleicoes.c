@@ -3,10 +3,13 @@
 #include <string.h>
 #include <ctype.h>
 
+
 // STRUCTS E ALOCAÇÃO DE MEMÓRIA //
 typedef struct{
     char nomePrtd[50];
     char siglaPrtd[10];
+    char siglaFederacao[10];
+    int voto;
     char siglaFederacao[10];
     int voto;
     // Ponteiro para vetor de candidato
@@ -27,6 +30,26 @@ int partidoEmOutraFederacao(partidos* P, int numFederacoes, char* siglaPartido){
 }
 
 
+typedef struct{
+    char nomeCandidato[50];
+    int idade;
+    char num_canditados[5];
+    int voto;
+    partidos* filiacao; 
+}candidato;
+
+
+typedef struct{
+    char nomeFederacao[50];
+    char siglaFederacao[10];
+    int voto;
+    int numPartido;
+    partidos* partidosNaFederacao;
+    
+    // Ponteiro para vetor de candidato 
+}federacao;
+
+
 partidos* alocaVetPartidos(int tam){
     /*Função que realiza a alocação de memória para o ponteiro dos partidos.
     Será exibida uma mensagem de erro, caso a alocação seja mal sucedida e retorna 
@@ -38,15 +61,6 @@ partidos* alocaVetPartidos(int tam){
     }
     return vetPartido;
 }
-
-typedef struct{
-    char nomeCandidato[50];
-    int idade;
-    char num_canditados[5];
-    int voto;
-    partidos* filiacao; 
-}candidato;
-
 
 candidato* alocaVetCandidatos(int tam){
     /*Função que realiza a alocação de memória para o ponteiro dos candidatos.
@@ -60,16 +74,6 @@ candidato* alocaVetCandidatos(int tam){
     }
     return vetCandidato;
 }
-
-typedef struct{
-    char nomeFederacao[50];
-    char siglaFederacao[10];
-    int voto;
-    int numPartido;
-    partidos* partidosNaFederacao;
-    
-    // Ponteiro para vetor de candidato 
-}federacao;
 
 
 federacao* alocaVetFederacao(int tam){
@@ -86,30 +90,51 @@ federacao* alocaVetFederacao(int tam){
 }
 
 
-int verificaExistenciaPartido(partidos*P, int tam, char* nome){
-    /* A função verifica se o partido digitado pelo usuário existe. A mesma foi criada
-    com a intencao de verificar se o partido existe, a fim de não registrar outro com o
-    mesmo nome. O mesmo acontece para fazer parte da federacao, visto que o partido só pode
-    participar de uma federaçao.
-    Ela retorna 1 caso o partido exista, caso contrário, retorna 0*/
+void normalizaString(char *str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = toupper(str[i]);
+    }
+}
 
+
+int verificaExistenciaPartido(partidos*P, int tam, char* nome){
+    /*
+        A função verifica se o partido digitado pelo usuário existe. A mesma foi criada
+        com a intencao de verificar se o partido existe, a fim de não registrar outro com o
+        mesmo nome. O mesmo acontece para fazer parte da federacao, visto que o partido só pode
+        participar de uma federaçao.
+        Ela retorna 1 caso o partido exista, caso contrário, retorna 0
+    */
     int i;
+    char nomeNormal[50];
+    strcpy(nomeNormal, nome);
+    normalizaString(nomeNormal);
+    
     for(i=0; i<(tam + 1); i++){
-        if(strcmp(P[i].nomePrtd, nome) == 0){
+        normalizaString(P[i].nomePrtd);
+        if(strcmp(P[i].nomePrtd, nomeNormal) == 0){
             return 1; //Partido encontrato
         } 
     }
     return 0; // Partido não encontrato
 }
+
+
 int verificaSiglaPrtd(partidos*P, int tam, char* nome){
     int i;
+    char nomeNormal[10];
+    strcpy(nomeNormal, nome);
+    normalizaString(nomeNormal);
+
     for(i=0; i<tam; i++){
-        if(strcmp(P[i].siglaPrtd, nome) == 0){
+        normalizaString(P[i].siglaPrtd);
+        if(strcmp(P[i].siglaPrtd, nomeNormal) == 0){
             return 1; //Sigla encontrada
         }
     }
     return 0; //Sigla não encontrada
 }
+
 
 int letras(char *soLetra){
     /*Função é utilizada para verificar a entrada do usuário é apenas letra.
@@ -144,8 +169,13 @@ int verificaNumeroCandidato(char* numCandidato){
 
 int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
     int i;
-    for(i=0; i<tam; i++){
-        if(strcmp(C[i].nomeCandidato, nomeC) == 0){
+    char nomeNormal[50];
+    strcpy(nomeNormal, nomeC);
+    normalizaString(nomeNormal);
+
+    for(i=0; i<(tam + 1); i++){
+        normalizaString(C[i].nomeCandidato);
+        if(strcmp(C[i].nomeCandidato, nomeNormal) == 0){
             return 1; //Candidato encontrado
         }
     }
@@ -161,6 +191,49 @@ int numCandidatoExiste (candidato*C, char *numCandidato, int tam){
     }
     return 0; // Numero de candidato não existe
 }
+
+int verificaExisFederacao(federacao*F, int tam, char* nome){
+    /*A função verifica se a federação que o usuário deseja inserir já existe. Caso a federação 
+    exista a função retorna 1, caso contrário retorna 0. Quando é a função retorna zero é possível
+    registrar a federação.*/
+    int i;
+    char nomeNormal[50];
+    strcpy(nomeNormal, nome);
+    normalizaString(nomeNormal);
+
+    for(i=0; i<tam; i++){
+        char fdrNormal[50];
+        strcpy(fdrNormal, F[i].nomeFederacao);
+
+        if(strcmp(fdrNormal, nomeNormal) == 0){
+            return 1; //Federacao encontrada
+        }
+    }
+    return 0; //Federacao não encontrada
+}
+
+//Partido em Outra Federacao//
+int partidoEmOutraFederacao(partidos* P, int numFederacoes, char* siglaPartido){
+    int i;
+    char nomeNormal[10];
+    strcpy(nomeNormal, siglaPartido);
+    normalizaString(nomeNormal);
+
+    for(i = 0; i < numFederacoes; i++){
+        char siglasNormais[10];
+        strcpy(siglasNormais, P[i].siglaPrtd);
+        normalizaString(siglasNormais);
+
+        if(strcmp(siglasNormais, nomeNormal) == 0){
+            if(P[i].siglaFederacao[0] != '\0'){
+                return 1; //Tá em outra federação
+            }
+            break;
+        }
+    }
+    return 0; //Não está em outra federação
+}
+
 int obterInteiro(){
     int valor;
     int resultado;
@@ -185,7 +258,9 @@ void normalizaString(char *str) {
     }
 }
 
+
 void cadastrarPartido(partidos*P, int *contador){
+
     char nome[50];
     char sigla[10];
     int existePartido, existeSigla;
@@ -241,6 +316,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     printf("Partido Filiado: ");
     fgets(partido, sizeof(partido), stdin);
     partido[strcspn(partido, "\n")] = '\0'; //Remove caracter de Nova linha
+    normalizaString(partido);
 
     printf("Nome Completo: ");
     fgets(nomeCandidato, sizeof(nomeCandidato), stdin);
@@ -267,6 +343,11 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     existeNome = verificaNomeCandidato(C, *contador, nomeCandidato);
     existeNumCandidato = numCandidatoExiste(C, numCandidato, *contador);
 
+    printf("%d\n", existePartido);
+    printf("%d\n", existeNome);
+    printf("%d\n", existeNumCandidato);
+    printf("%s\n", partido);
+
     if(existePartido && !existeNome && !existeNumCandidato){
         for(int i = 0; i<numPartidos; i++){
             if(strcmp(P[i].nomePrtd, partido) == 0){
@@ -281,6 +362,8 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
             C[*contador].voto = 0;
             (*contador)++;
             printf("Candidato Cadastrado com sucesso!\n\n");
+        } else {
+            printf("Erro ao cadastrar candidato!\n");
         }
     } else{
         if(!existePartido){
@@ -295,6 +378,14 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     }
 }
 
+void registrarFederacao(federacao*F, int pos){
+    printf("Digite o nome da Federacao: ");
+    scanf("%s", F[pos].nomeFederacao);
+    printf("Digite a sigla da Federacao: ");
+    scanf("%s", F[pos].siglaFederacao);
+}
+
+
 int verificaExisFederacao(federacao*F, int tam, char* nome){
     /*A função verifica se a federação que o usuário deseja inserir já existe. Caso a federação 
     exista a função retorna 1, caso contrário retorna 0. Quando é a função retorna zero é possível
@@ -307,98 +398,6 @@ int verificaExisFederacao(federacao*F, int tam, char* nome){
     }
     return 0; //Federacao não encontrada
 }
-
-void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int numPartidos){
-    char nomeF[50];
-    char siglaF[10];
-    char siglaPartidoInserir[50];
-    int continuar = 1;
-
-
-    if(numPartidos < 2){
-        printf("Não é possível cadastrar Federação! Menos de dois partidos cadastrados!\n");
-        return;
-    }
-
-    
-    printf("Digite o nome da Federacao: ");
-    fgets(nomeF, sizeof(nomeF), stdin);
-    nomeF[strcspn(nomeF, "\n")] = '\0'; // Remove o \n da nova linha;
-    
-    if(verificaExisFederacao(F, *contadorFederacao, nomeF)){
-        printf("ERRO: Existe uma federação com esse nome!\n");
-        return;
-    }
-
-    printf("Digite a sigla da Federacao: ");
-    fgets(siglaF, sizeof(siglaF), stdin);
-    siglaF[strcspn(siglaF, "\n")] = '\0'; //Remove o \n da nova linha;
-
-    if(verificaExisFederacao(F, *contadorFederacao, siglaF)){
-        printf("ERRO: Existe uma federação com essa sigla!\n");
-        return;
-    }
-    
-    F[*contadorFederacao].partidosNaFederacao = alocaVetPartidos(numPartidos);
-    F[*contadorFederacao].numPartido = 0;
-
-    printf("Quais partidos vão fazer parte desta federação: ");
-    while(continuar){
-        printf("Digite a sigla do partido que você deseja adicionar a federação ('fim' para terminar): ");
-        fgets(siglaPartidoInserir, sizeof(siglaPartidoInserir), stdin);
-        siglaPartidoInserir[strcspn(siglaPartidoInserir, "\n")] = '\0';
-        
-        if (strcmp(siglaPartidoInserir, "fim") == 0){
-            if(F[*contadorFederacao].numPartido < 2){
-                printf("ERRO: Uma federação deve conter pelo menos 2 partidos!\n");
-                return;
-            }
-            break;
-        }
-
-        if(!verificaSiglaPrtd(P, numPartidos, siglaPartidoInserir)){
-            printf("ERRO: Sigla não encontrada!\n");
-            continue;
-        }
-        
-        if(partidoEmOutraFederacao(P,numPartidos, siglaPartidoInserir)){
-            printf("ERRO: Este partido já está em uma federação!\n");
-            continue;
-        }
-
-        for(int i = 0; i < numPartidos; i++){
-            if(strcmp(P[i].siglaPrtd, siglaPartidoInserir) == 0){
-                strcpy(P[i].siglaFederacao, siglaF);
-                F[*contadorFederacao].numPartido++;
-                break;
-            }
-        }
-    }
-
-    strcpy(F[*contadorFederacao].nomeFederacao, nomeF);
-    strcpy(F[*contadorFederacao]. siglaFederacao, siglaF);
-    (*contadorFederacao)++;
-
-    printf("Federação cadastrada!\n");
-    
-}
-
-// Incrementa o voto no partido ou federação correto
-void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederacao, char* siglaPartido) {
-    // Verifica se é uma federação ou partido para incrementar o voto
-    int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
-    if (iFederacao != -1) {
-        F[iFederacao].voto++;  // Incrementa o voto na federação
-    } else {
-        for (int i = 0; i < numPartidos; i++) {
-            if (strcmp(P[i].siglaPrtd, siglaPartido) == 0) {
-                P[i].voto++;  // Incrementa o voto no partido
-                break;
-            }
-        }
-    }
-}
-
 
 void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_eleitoral){
     // Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. 
@@ -807,7 +806,6 @@ void menu(){
                 }
                 printf("Cadastrando o %dº candidato\n", contadorCandidatos + 1);
                 cadastrarCandidato(C, P, &contadorCandidatos, contadorPartidos);
-                // contadorCandidatos++;
                 printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): ");
                 continuar = obterInteiro();
             }
