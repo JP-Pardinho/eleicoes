@@ -66,7 +66,7 @@ typedef struct{
     char siglaFederacao[10];
     int voto;
     int numPartido;
-    char parNafederacao;
+    partidos* partidosNaFederacao;
     
     // Ponteiro para vetor de candidato 
 }federacao;
@@ -338,6 +338,9 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
         printf("ERRO: Existe uma federação com essa sigla!\n");
         return;
     }
+    
+    F[*contadorFederacao].partidosNaFederacao = alocaVetPartidos(numPartidos);
+    F[*contadorFederacao].numPartidos = 0;
 
     printf("Quais partidos vão fazer parte desta federação: ");
     while(continuar){
@@ -346,7 +349,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
         siglaPartidoInserir[strcspn(siglaPartidoInserir, "\n")] = '\0';
         
         if (strcmp(siglaPartidoInserir, "fim") == 0){
-            if(numPartidosFederacao < 2){
+            if(F[*contadorFederacao].numPartidos < 2){
                 printf("ERRO: Uma federação deve conter pelo menos 2 partidos!\n");
                 return;
             }
@@ -366,7 +369,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
         for(int i = 0; i < numPartidos; i++){
             if(strcmp(P[i].siglaPrtd, siglaPartidoInserir) == 0){
                 strcpy(P[i].siglaFederacao, siglaF);
-                numPartidosFederacao++;
+                F[*contadorFederacao].numPartidos++;
                 break;
             }
         }
