@@ -10,24 +10,8 @@ typedef struct{
     char siglaPrtd[10];
     char siglaFederacao[10];
     int voto;
-    char siglaFederacao[10];
-    int voto;
     // Ponteiro para vetor de candidato
 }partidos; 
-
-//Partido em Outra Federacao//
-int partidoEmOutraFederacao(partidos* P, int numFederacoes, char* siglaPartido){
-    int i;
-    for(i = 0; i < numFederacoes; i++){
-        if(strcmp(P[i].siglaPrtd, siglaPartido) == 0){
-            if(P[i].siglaFederacao[0] != '\0'){
-                return 1; //Tá em outra federação
-            }
-            break;
-        }
-    }
-    return 0; //Não está em outra federação
-}
 
 
 typedef struct{
@@ -173,7 +157,7 @@ int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
     strcpy(nomeNormal, nomeC);
     normalizaString(nomeNormal);
 
-    for(i=0; i<tam; i++){
+    for(i=0; i<(tam + 1); i++){
         normalizaString(C[i].nomeCandidato);
         if(strcmp(C[i].nomeCandidato, nomeNormal) == 0){
             return 1; //Candidato encontrado
@@ -307,6 +291,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     printf("Partido Filiado: ");
     fgets(partido, sizeof(partido), stdin);
     partido[strcspn(partido, "\n")] = '\0'; //Remove caracter de Nova linha
+    normalizaString(partido);
 
     printf("Nome Completo: ");
     fgets(nomeCandidato, sizeof(nomeCandidato), stdin);
@@ -332,6 +317,11 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     existePartido = verificaExistenciaPartido(P,*contador, partido);
     existeNome = verificaNomeCandidato(C, *contador, nomeCandidato);
     existeNumCandidato = numCandidatoExiste(C, numCandidato, *contador);
+
+    printf("%d\n", existePartido);
+    printf("%d\n", existeNome);
+    printf("%d\n", existeNumCandidato);
+    printf("%s\n", partido);
 
     if(existePartido && !existeNome && !existeNumCandidato){
         for(int i = 0; i<numPartidos; i++){
@@ -378,7 +368,14 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
 
     
     printf("Digite o nome da Federacao: ");
-    scanf("%s", F[pos].nomeFederacao);
+    fgets(nomeF, sizeof(nomeF), stdin);
+    nomeF[strcspn(nomeF, "\n")] = '\0'; // Remove o \n da nova linha;
+    
+    if(verificaExisFederacao(F, *contadorFederacao, nomeF)){
+        printf("ERRO: Existe uma federação com esse nome!\n");
+        return;
+    }
+
     printf("Digite a sigla da Federacao: ");
     fgets(siglaF, sizeof(siglaF), stdin);
     siglaF[strcspn(siglaF, "\n")] = '\0'; //Remove o \n da nova linha;
@@ -432,7 +429,6 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     
 }
 
-// DIFERENTE E QUEBRANDO CÓDIGO
 // Incrementa o voto no partido ou federação correto
 void incrementarVoto(partidos* P, int numPartido, federacao* F, int numFederacao, char* siglaPartido) {
     // Verifica se é uma federação ou partido para incrementar o voto
@@ -441,17 +437,23 @@ void incrementarVoto(partidos* P, int numPartido, federacao* F, int numFederacao
     
     int iPartido = verificaSiglaPrtd(P, numPartido, siglaPartido);
     int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
-    if (iFederacao != -1) {
-        F[iFederacao].voto++;  // Incrementa o voto na federação
-    } else {
-        for (int i = 0; i < numPartidos; i++) {
+    printf("\n");
+    printf("chegou até aqui 1\n");
+
+    if (iPartido == 1){
+        printf("chegou até aqui 2\n");  
+        for (int i = 0; i < numPartido; i++) {
             if (strcmp(P[i].siglaPrtd, siglaPartido) == 0) {
                 P[i].voto++;  // Incrementa o voto no partido
                 break;
             }
         }
+    } else if (iFederacao == 1){
+        printf("chegou até aqui 3\n");  
+        F[iFederacao].voto++;  // Incrementa o voto na federação
+    } else {
+        printf("Deu erro!\n");
     }
-
 }
 
 
@@ -490,6 +492,7 @@ void secao2(candidato* C, int numCandidatos) {
 }
 
 
+
 void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
    // Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. 
 
@@ -501,23 +504,14 @@ void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
     printf("| %-30s | %-10s |\n", "Nome do Partido", "Votos");
     printf("|___________________________________________|\n");
 
-    // Mostrar votos por federação
     for (int j = 0; j < numFederacao; j++) {
-        int votosFederacao = F[j].voto;
-        // Somar votos dos partidos que pertencem à federação
-        for (int p = 0; p < numPartidos; p++) {
-            if (strcmp(P[p].siglaFederacao, F[j].siglaFederacao) == 0) {
-                votosFederacao += P[p].voto;  // Adiciona votos do partido à federação
-            }
-        }
-        printf("| %-30s | %-10d |\n", F[j].nomeFederacao, votosFederacao);
+        printf("| %-30s | %-10d |\n", F[j].nomeFederacao, F[j].voto);
     }
 
-    // Mostrar votos por partido que não faz parte de nenhuma federação
+    // Imprime os votos por partido
     for (int k = 0; k < numPartidos; k++) {
-        if (P[k].siglaFederacao[0] == '\0') {  // Verifica se o partido não pertence a nenhuma federação
-            printf("| %-30s | %-10d |\n", P[k].nomePrtd, P[k].voto);
-        }
+        printf("Debug - Partido: %s, Votos: %d\n", P[k].nomePrtd, P[k].voto); // Depuração
+        printf("| %-30s | %-10d |\n", P[k].nomePrtd, P[k].voto);
     }
     printf("|___________________________________________|\n");
 }
@@ -920,6 +914,7 @@ void menu(){
 
 int main() {
 
+    // Criar variaveis contadoras para Votos Nulos, Votos Validos, Votos em Branco
     menu();
 
     return 0;
