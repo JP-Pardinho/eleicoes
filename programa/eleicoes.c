@@ -19,6 +19,7 @@ typedef struct{
     int idade;
     char num_canditados[5];
     int voto;
+    char candidatoEscolhido[50];
     partidos* filiacao; 
 }candidato;
 
@@ -93,8 +94,8 @@ int verificaExistenciaPartido(partidos*P, int tam, char* nome){
     char nomeNormal[50];
     strcpy(nomeNormal, nome);
     normalizaString(nomeNormal);
-    
-    for(i=0; i<(tam + 1); i++){
+
+    for(i=0; i<tam; i++){
         normalizaString(P[i].nomePrtd);
         if(strcmp(P[i].nomePrtd, nomeNormal) == 0){
             return 1; //Partido encontrato
@@ -163,7 +164,7 @@ int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
             return 1; //Candidato encontrado
         }
     }
-    return 0; //Candidado não encontrado
+    return 0; //Candidato não encontrado
 }
 
 int numCandidatoExiste (candidato*C, char *numCandidato, int tam){
@@ -240,7 +241,6 @@ void cadastrarPartido(partidos*P, int *contador){
     char nome[50];
     char sigla[10];
     int existePartido, existeSigla;
-    
     printf("Digite o nome do partido: ");
     fgets(nome, sizeof(nome), stdin);
     nome[strcspn(nome, "\n")] = '\0';
@@ -284,13 +284,14 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     char partido[50];
     int idadeCandidato;
     int existePartido, existeNome, existeNumCandidato;
-    partidos *partidoFiliado = NULL;
+    partidos *filiacao = NULL;
     /*Verificar se o candidato já existe(nome composto(fgets)), se o numero já exite, se o partido que 
     ele quer participar existe*/
     
     printf("Partido Filiado: ");
     fgets(partido, sizeof(partido), stdin);
     partido[strcspn(partido, "\n")] = '\0'; //Remove caracter de Nova linha
+    normalizaString(partido);
 
     printf("Nome Completo: ");
     fgets(nomeCandidato, sizeof(nomeCandidato), stdin);
@@ -313,26 +314,26 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
         printf("Número do candidato inválido! Faça novamente o cadastro...\n");
     }
 
-    existePartido = verificaExistenciaPartido(P,*contador, partido);
+    existePartido = verificaExistenciaPartido(P, numPartidos, partido);
     existeNome = verificaNomeCandidato(C, *contador, nomeCandidato);
     existeNumCandidato = numCandidatoExiste(C, numCandidato, *contador);
 
+    filiacao = NULL;
     if(existePartido && !existeNome && !existeNumCandidato){
         for(int i = 0; i<numPartidos; i++){
             if(strcmp(P[i].nomePrtd, partido) == 0){
-                partidoFiliado = &P[i];
+                filiacao = &P[i];
                 break;
             }
         }
-        if(partidoFiliado != NULL){
+        if(filiacao != NULL){
             strcpy(C[*contador].nomeCandidato, nomeCandidato);
             C[*contador].idade = idadeCandidato;
             strcpy(C[*contador].num_canditados, numCandidato);
             C[*contador].voto = 0;
+            C[*contador].filiacao = filiacao;
             (*contador)++;
             printf("Candidato Cadastrado com sucesso!\n\n");
-        } else {
-            printf("Erro ao cadastrar candidato!\n");
         }
     } else{
         if(!existePartido){
@@ -363,6 +364,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     
     printf("Digite o nome da Federacao: ");
     fgets(nomeF, sizeof(nomeF), stdin);
+    normalizaString(nomeF);
     nomeF[strcspn(nomeF, "\n")] = '\0'; // Remove o \n da nova linha;
     
     if(verificaExisFederacao(F, *contadorFederacao, nomeF)){
@@ -372,6 +374,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
 
     printf("Digite a sigla da Federacao: ");
     fgets(siglaF, sizeof(siglaF), stdin);
+    normalizaString(siglaF);
     siglaF[strcspn(siglaF, "\n")] = '\0'; //Remove o \n da nova linha;
 
     if(verificaExisFederacao(F, *contadorFederacao, siglaF)){
@@ -386,9 +389,10 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     while(continuar){
         printf("Digite a sigla do partido que você deseja adicionar a federação ('fim' para terminar): ");
         fgets(siglaPartidoInserir, sizeof(siglaPartidoInserir), stdin);
+        normalizaString(siglaPartidoInserir);
         siglaPartidoInserir[strcspn(siglaPartidoInserir, "\n")] = '\0';
-        
-        if (strcmp(siglaPartidoInserir, "fim") == 0){
+
+        if (strcmp(siglaPartidoInserir, "FIM") == 0){
             if(F[*contadorFederacao].numPartido < 2){
                 printf("ERRO: Uma federação deve conter pelo menos 2 partidos!\n");
                 return;
@@ -425,31 +429,23 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
 
 // DIFERENTE E QUEBRANDO CÓDIGO
 // Incrementa o voto no partido ou federação correto
-void incrementarVoto(partidos* P, int numPartido, federacao* F, int numFederacao, char* siglaPartido) {
-    // Verifica se é uma federação ou partido para incrementar o voto
-    
-    normalizaString(siglaPartido);
-    
-    int iPartido = verificaSiglaPrtd(P, numPartido, siglaPartido);
-    int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
-    printf("\n");
-    printf("chegou até aqui 1\n");
+void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederacao, char* siglaPartido) {
 
-    if (iPartido == 1){
-        printf("chegou até aqui 2\n");  
-        for (int i = 0; i < numPartido; i++) {
+     normalizaString(siglaPartido);
+    //
+    int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
+    if (iFederacao != 0) {  // Verifica se a federação foi encontrada
+        F[iFederacao].voto++;  // Incrementa o voto na federação
+    } else {
+        for (int i = 0; i < numPartidos; i++) {
             if (strcmp(P[i].siglaPrtd, siglaPartido) == 0) {
                 P[i].voto++;  // Incrementa o voto no partido
                 break;
             }
         }
-    } else if (iFederacao == 1){
-        printf("chegou até aqui 3\n");  
-        F[iFederacao].voto++;  // Incrementa o voto na federação
-    } else {
-        printf("Deu erro!\n");
     }
 }
+
 
 
 void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_eleitoral){
@@ -596,8 +592,6 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
             vagasRestantes--;
         }
     }
-
-
     printf("_____________________________________________\n");
 }
 
@@ -634,7 +628,7 @@ void secao6(candidato* C, int numCandidatos, double q_eleitoral) {
     printf("|                                           |\n");
     printf("|       Candidatos Suplentes                |\n");
     printf("|___________________________________________|\n");
-    printf("| %-28s | %-16s | %-8s |\n", "Nome do Candidato", "Votos", "Idade");
+    printf("  %-28s | %-16s | %-8s  \n", "Nome do Candidato", "Votos", "Idade");
     printf("|___________________________________________|\n");
 
     for (int i = 0; i < contadorSuplentes; i++) {
@@ -648,14 +642,15 @@ void secao6(candidato* C, int numCandidatos, double q_eleitoral) {
 }
 
 
-
 void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos, double q_eleitoral, partidos* P, int* numPartidos, federacao* F, int* numFederacao) {
     /* FAZER  O DOCSTRING */
     int continuar = 1;
     int opcao, votoConfirmado = 0;
     int escola;
     char numCandidato[6]; // 5 dígitos + '\0'
-    candidato* candidatoEscolhido = NULL;
+
+    // Verificar pq não entra no if
+    candidato *candidatoEscolhido = NULL;
 
     while (continuar) {
 
@@ -691,6 +686,7 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
                 candidatoEscolhido = NULL;
 
                 for (int i = 0; i < *numCandidatos; i++) {
+                    normalizaString(C[i].num_canditados);
                     if (strcmp(C[i].num_canditados, numCandidato) == 0) {
                         candidatoEscolhido = &C[i];
                         break;
@@ -714,18 +710,24 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
                 votoConfirmado = obterInteiro();
 
                 if (votoConfirmado == 1) {  // Confirmar voto
-                    if (candidatoEscolhido && candidatoEscolhido->filiacao) {
+                    if (candidatoEscolhido && candidatoEscolhido->filiacao != NULL) {
                         candidatoEscolhido->voto++;
                         (*votosValidos)++;
+                        printf("Erro op 1!! %s\n", candidatoEscolhido->filiacao->siglaPrtd);
                         incrementarVoto(P, *numPartidos, F, *numFederacao, candidatoEscolhido->filiacao->siglaPrtd);
                         printf("Voto registrado para %s\n", candidatoEscolhido->nomeCandidato);
-                    } else {
+                    } else if (!candidatoEscolhido) {
                         (*votosNulos)++;
                         printf("Voto Nulo registrado.\n");
+                    } else {
+                        printf("Erro tristeza!!\n");
                     }
                 } else if (votoConfirmado == 3) {  // Votar em branco
                     (*votosBranco)++;
                     printf("Voto em Branco registrado.\n");
+                }
+                else {
+                    printf("Voltou!\n");
                 }
                 // Retornar não faz nada, apenas volta ao menu de votação
             } else if (opcao == 2) {  // Encerrar votação
@@ -787,7 +789,7 @@ void menu(){
     //Candidatos//
     candidato* C = NULL;
     int contadorCandidatos = 0;
-    int tamCandidatos = 10;
+    int tamCandidatos = 50;
     C = alocaVetCandidatos(tamCandidatos);
     //Federação//
     federacao* F = NULL;
@@ -834,7 +836,7 @@ void menu(){
                 if(contadorPartidos >= tamPartidos){
                     tamPartidos *= 2;
                     P = realloc(P, tamPartidos* sizeof(partidos));
-                    if(P ==NULL){
+                    if(P == NULL){
                         printf("ERRO: realocação mal sucedida!\n");
                         exit(1);
                     }
@@ -843,6 +845,7 @@ void menu(){
                 cadastrarPartido(P, &contadorPartidos);
                 printf("Deseja inserir outro partido? (1 - Sim / 0 - Não): ");
                 continuar = obterInteiro();
+                printf("\n");
             }
         }
 
@@ -869,6 +872,7 @@ void menu(){
                 cadastrarCandidato(C, P, &contadorCandidatos, contadorPartidos);
                 printf("Deseja cadastrar outro candidato? (1 - Sim / 0 - Não): ");
                 continuar = obterInteiro();
+                printf("\n");
             }
         }
 
@@ -896,6 +900,7 @@ void menu(){
                 printf("\n");
                 printf("Deseja cadastrar outra federação? (1 - Sim / 0 - Não): ");
                 continuar = obterInteiro();
+                printf("\n");
             }
         }
 
