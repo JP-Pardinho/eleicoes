@@ -140,7 +140,7 @@ int verificaNumeroCandidato(char* numCandidato){
     int tam = strlen(numCandidato);
     int ch;
 
-    if(tam != 5){
+    if(tam != 6){
         return 0; // Tem menos ou mais que 5 dígitos
     }
     for(i = 0; i < 5; i++){
@@ -217,21 +217,28 @@ int partidoEmOutraFederacao(partidos* P, int numFederacoes, char* siglaPartido){
 }
 
 
-int obterInteiro(){
+int obterInteiro() {
     int valor;
-    int resultado;
     char ch;
 
-    while(1){
-        resultado = scanf("%d", &valor);
-        
-        if (resultado == 1){
-            while((ch = getchar()) != '\n' && ch != EOF);
-            return valor;
-        }
-        else{
-            while (getchar() != '\n');
-            printf("Entrada inválida. Por favor, Digite um número inteiro: ");
+    while (1) {
+
+        if (scanf("%d", &valor) == 1) {
+            // Verificar se sobrou algo no buffer de entrada
+            ch = getchar();
+            if (ch == '\n') {
+                return valor;  // Entrada válida, retorna o número
+            } else {
+                // Se sobrou algo no buffer, é uma entrada inválida
+                
+                printf("Por favor, digite apenas números inteiros.\n");
+                while (getchar() != '\n');  // Limpar o buffer
+            }
+        } else {
+            // Limpar o buffer se scanf falhar
+            printf("Entrada inválida.\n");
+            printf("Por favor, digite apenas números inteiros.\n");
+            while (getchar() != '\n');  // Limpar o buffer
         }
     }
 }
@@ -296,7 +303,8 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     printf("Nome Completo: ");
     fgets(nomeCandidato, sizeof(nomeCandidato), stdin);
     nomeCandidato[strcspn(nomeCandidato, "\n")] = '\0'; //Remove caracter de Nova linha
-    
+    normalizaString(nomeCandidato);
+
     printf("Idade: ");
     idadeCandidato = obterInteiro();
 
@@ -447,7 +455,6 @@ void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederaca
 }
 
 
-
 void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_eleitoral){
     // Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. 
 
@@ -476,7 +483,7 @@ void secao2(candidato* C, int numCandidatos) {
     printf("|___________________________________________|\n");
 
     for (int i = 0; i < numCandidatos; i++) {
-        printf("  %-30s | %-10d \n", C[i].nomeCandidato, C[i].voto);
+        printf("  %-28s | %-10d \n", C[i].nomeCandidato, C[i].voto);
     }
     
     printf("|___________________________________________|\n");
@@ -491,7 +498,7 @@ void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
     printf("|             Partidos e Votos              |\n");
     printf("_____________________________________________\n");
     printf("|                                           |\n");
-    printf("| %-30s | %-10s |\n", "Nome do Partido", "Votos");
+    printf("| %-30s | %8s |\n", "Nome do Partido", "Votos");
     printf("|___________________________________________|\n");
 
     // Mostrar votos por federação
@@ -503,13 +510,14 @@ void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
                 votosFederacao += P[p].voto;  // Adiciona votos do partido à federação
             }
         }
-        printf("| %-30s | %-10d |\n", F[j].nomeFederacao, votosFederacao);
+        F[j].voto = votosFederacao;
+        printf("  %-30s | %-10d  \n", F[j].nomeFederacao, votosFederacao);
     }
 
     // Mostrar votos por partido que não faz parte de nenhuma federação
     for (int k = 0; k < numPartidos; k++) {
         if (P[k].siglaFederacao[0] == '\0') {  // Verifica se o partido não pertence a nenhuma federação
-            printf("| %-30s | %-10d |\n", P[k].nomePrtd, P[k].voto);
+            printf("  %-30s | %-10d  \n", P[k].nomePrtd, P[k].voto);
         }
     }
     printf("|___________________________________________|\n");
@@ -531,31 +539,31 @@ void secao4(partidos* P, int numPartidos, federacao* F, int numFederacao, int vo
 
     
     for (int i = 0; i < numFederacao; i++) {
-        double quocientePartidario = (double)F[i].voto / quocienteEleitoral;
-        int numeroCadeiras = (int)quocientePartidario;
-        printf("| %-30s | %-16.2lf | %-8d |\n", F[i].nomeFederacao, quocientePartidario, numeroCadeiras);
+        double quocientePartidario = F[i].voto / quocienteEleitoral;
+        int numeroCadeiras = quocientePartidario;
+        printf("  %-31s | %-16.2lf | %-8d  \n", F[i].nomeFederacao, quocientePartidario, numeroCadeiras);
     }
 
     for (int j = 0; j < numPartidos; j++) {
         if (P[j].siglaFederacao[0] == '\0') { 
-            double quocientePartidario = (double)P[j].voto / quocienteEleitoral;
-            int numeroCadeiras = (int)quocientePartidario;
-            printf("| %-30s | %-16.2lf | %-8d |\n", P[j].nomePrtd, quocientePartidario, numeroCadeiras);
+            double quocientePartidario = P[j].voto / quocienteEleitoral;
+            int numeroCadeiras = quocientePartidario;
+            printf("  %-30s | %-16.2lf | %-8d  \n", P[j].nomePrtd, quocientePartidario, numeroCadeiras);
         }
     }
 
-    printf("_________________________________________________________________\n");
+    printf("|_______________________________________________________________|\n");
 }
 
 void secao5(candidato* C, int numCandidatos, double q_eleitoral){
    // Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua legenda.
-    printf("_____________________________________________\n");
-    printf("|                                           |\n");
-    printf("|       Candidatos Eleitos e Legenda        |\n");
-    printf("|___________________________________________|\n");
+    printf("____________________________________________________________\n");
+    printf("|                                                          |\n");
+    printf("|               Candidatos Eleitos e Legenda               |\n");
+    printf("|__________________________________________________________|\n");
     printf("| %-28s | %-10s |\n", "Nome do Candidato", "Legenda");
-    printf("|___________________________________________|\n");
-    printf("                                             \n");
+    printf("|__________________________________________________________|\n");
+    printf("|                                                          |\n");
 
     double quocienteMinimo = 0.1 * q_eleitoral;
     int vagasDistribuidas = 0;
@@ -563,7 +571,7 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
 
     for (int i = 0; i < numCandidatos; i++) {
         if (C[i].voto >= quocienteMinimo) {
-            printf("| %-28s | %-10s |\n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
+            printf("  %-28s | %-10s  \n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
             vagasDistribuidas++;
         }
     }
@@ -592,7 +600,7 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
             vagasRestantes--;
         }
     }
-    printf("_____________________________________________\n");
+    printf("|___________________________________________|\n");
 }
 
 
@@ -916,7 +924,7 @@ void menu(){
             iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos, q_eleitoral, P, &contadorPartidos, F, &contadorFederacao);
         }
     }while(op != 5);
-        printf("Finalizando...");
+        printf("Finalizando...\n");
     free(P); // Limpa a memória
 }
 
