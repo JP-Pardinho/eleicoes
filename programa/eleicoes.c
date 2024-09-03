@@ -140,14 +140,10 @@ int verificaNumeroCandidato(char* numCandidato){
     int tam = strlen(numCandidato);
     int verifica = 0;   
 
-    printf("numCandidato: %s\n", numCandidato);
-    printf("tam: %d\n", tam);
-
     if(tam == 5) {
         for (i=0; i<tam; i++) {
             if (numCandidato[i] >= '0' && numCandidato[i] <= '9') {
                 verifica++;
-                printf("%d\n", verifica);
             }
         }
         if (verifica == 5) {
@@ -244,6 +240,7 @@ int obterInteiro() {
                 // Se sobrou algo no buffer, é uma entrada inválida
                 
                 printf("Por favor, digite apenas números inteiros.\n");
+                printf("-> ");
                 while (getchar() != '\n');  // Limpar o buffer
             }
         } else {
@@ -324,6 +321,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     printf("Numero de eleitor (5 dígitos): ");
     fgets(numCandidato, sizeof(numCandidato), stdin);
     numCandidato[strcspn(numCandidato, "\n")] = '\0';
+    
 
     if(!letras(partido)){
         printf("O nome do partido deve conter apenas letras!\n");
@@ -482,24 +480,25 @@ void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_elei
     *q_eleitoral += (*q_eleitoral + *votosValidos)/24;
 
     votos += *votosValidos + *votosNulos + *votosBranco;
+    printf("_____________________________________________\n");
+    printf("|                                           |\n");
+    printf("            Votos totais: %d                \n", votos);
+    printf("            Votos valídos: %d               \n", *votosValidos);           
+    printf("            Votos brancos: %d               \n", *votosBranco);
+    printf("            Votos nulos: %d                 \n", *votosNulos);
+    printf("            Quocinte eleitoral: %.2lf       \n", *q_eleitoral);
+    printf("|___________________________________________|\n");
 
-    printf("Votos totais: %d\n", votos);
-    printf("Votos valídos: %d\n", *votosValidos);
-    printf("Votos brancos: %d\n", *votosBranco);
-    printf("Votos nulos: %d\n", *votosNulos);
-    printf("Quocinte eleitoral: %.2lf\n", *q_eleitoral);
 }
 void secao2(candidato* C, int numCandidatos) {
     printf("_____________________________________________\n");
     printf("|                                           |\n");
     printf("|            Candidatos e Votos             |\n");
     printf("|___________________________________________|\n");
-    
-
-    printf("_____________________________________________\n");
     printf("|                                           |\n");
     printf("| %-28s | %-10s |\n", "Nome do Candidato", "Votos");
     printf("|___________________________________________|\n");
+    printf("|                                           |\n");
 
     for (int i = 0; i < numCandidatos; i++) {
         printf("  %-28s | %-10d \n", C[i].nomeCandidato, C[i].voto);
@@ -515,10 +514,11 @@ void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
     printf("_____________________________________________\n");
     printf("|                                           |\n");
     printf("|             Partidos e Votos              |\n");
-    printf("_____________________________________________\n");
+    printf("|___________________________________________|\n");
     printf("|                                           |\n");
     printf("| %-30s | %8s |\n", "Nome do Partido", "Votos");
     printf("|___________________________________________|\n");
+    printf("|                                           |\n");
 
     // Mostrar votos por federação
     for (int j = 0; j < numFederacao; j++) {
@@ -555,19 +555,21 @@ void secao4(partidos* P, int numPartidos, federacao* F, int numFederacao, int vo
     printf("|                                                               |\n");
     printf("|        Partido/Federacao         | Quociente Part. | Cadeiras |\n");
     printf("|_______________________________________________________________|\n");
+    printf("|                                                               |\n");
+    
 
     
     for (int i = 0; i < numFederacao; i++) {
         double quocientePartidario = F[i].voto / quocienteEleitoral;
         int numeroCadeiras = quocientePartidario;
-        printf("  %-31s | %-16.2lf | %-8d  \n", F[i].nomeFederacao, quocientePartidario, numeroCadeiras);
+        printf("  %-32s | %-16.2lf | %-8d  \n", F[i].nomeFederacao, quocientePartidario, numeroCadeiras);
     }
 
     for (int j = 0; j < numPartidos; j++) {
         if (P[j].siglaFederacao[0] == '\0') { 
             double quocientePartidario = P[j].voto / quocienteEleitoral;
             int numeroCadeiras = quocientePartidario;
-            printf("  %-30s | %-16.2lf | %-8d  \n", P[j].nomePrtd, quocientePartidario, numeroCadeiras);
+            printf("  %-32s | %-16.2lf | %-8d  \n", P[j].nomePrtd, quocientePartidario, numeroCadeiras);
         }
     }
 
@@ -580,7 +582,8 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
     printf("|                                                          |\n");
     printf("|               Candidatos Eleitos e Legenda               |\n");
     printf("|__________________________________________________________|\n");
-    printf("| %-28s | %-10s |\n", "Nome do Candidato", "Legenda");
+    printf("|                                                          |\n");
+    printf("| %-34s | %-19s |\n", "Nome do Candidato", "Legenda");
     printf("|__________________________________________________________|\n");
     printf("|                                                          |\n");
 
@@ -590,7 +593,7 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
 
     for (int i = 0; i < numCandidatos; i++) {
         if (C[i].voto >= quocienteMinimo) {
-            printf("  %-28s | %-10s  \n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
+            printf("  %-34s | %-10s  \n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
             vagasDistribuidas++;
         }
     }
@@ -615,11 +618,11 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
     int vagasRestantes = numCadeiras - vagasDistribuidas;
     for (int i = 0; i < numCandidatos && vagasRestantes > 0; i++) {
         if (C[i].voto < quocienteMinimo && C[i].voto > 0) {
-            printf("| %-28s | %-10s |\n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
+            printf("| %-34s | %-10s |\n", C[i].nomeCandidato, C[i].filiacao->siglaPrtd);
             vagasRestantes--;
         }
     }
-    printf("|___________________________________________|\n");
+    printf("|__________________________________________________________|\n");
 }
 
 
@@ -651,18 +654,20 @@ void secao6(candidato* C, int numCandidatos, double q_eleitoral) {
     }
 
     // Imprimir os suplentes
-    printf("_____________________________________________\n");
-    printf("|                                           |\n");
-    printf("|       Candidatos Suplentes                |\n");
-    printf("|___________________________________________|\n");
-    printf("  %-28s | %-16s | %-8s  \n", "Nome do Candidato", "Votos", "Idade");
-    printf("|___________________________________________|\n");
+    printf("______________________________________________________________\n");
+    printf("|                                                             |\n");
+    printf("|                    Candidatos Suplentes                     |\n");
+    printf("|_____________________________________________________________|\n");
+    printf("|                                                             |\n");
+    printf("| %-28s | %-16s | %-9s |\n", "Nome do Candidato", "Votos", "Idade");
+    printf("|_____________________________________________________________|\n");
+    printf("|                                                             |\n");
 
     for (int i = 0; i < contadorSuplentes; i++) {
-        printf("| %-28s | %-16d | %-8d |\n", suplentes[i].nomeCandidato, suplentes[i].voto, suplentes[i].idade);
+        printf("  %-28s | %-16d | %-8d  \n", suplentes[i].nomeCandidato, suplentes[i].voto, suplentes[i].idade);
     }
 
-    printf("|___________________________________________|\n");
+    printf("|_____________________________________________________________|\n");
 
     // Libera memória
     free(suplentes);
@@ -726,36 +731,37 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
                     printf("VOTO NULO\n");
                 }
 
-                // Menu de confirmação
-                printf("____________________________________\n");
-                printf("|                                  |\n");
-                printf("|       1) Confirmar Voto          |\n");
-                printf("|       2) Retornar                |\n");
-                printf("|       3) Votar em Branco         |\n");
-                printf("|__________________________________|\n");
-                printf("Digite uma opção: ");
-                votoConfirmado = obterInteiro();
+                do{
+                    // Menu de confirmação
+                    printf("____________________________________\n");
+                    printf("|                                  |\n");
+                    printf("|       1) Confirmar Voto          |\n");
+                    printf("|       2) Retornar                |\n");
+                    printf("|       3) Votar em Branco         |\n");
+                    printf("|__________________________________|\n");
+                    printf("Digite uma opção: ");
+                    votoConfirmado = obterInteiro();
 
-                if (votoConfirmado == 1) {  // Confirmar voto
-                    if (candidatoEscolhido && candidatoEscolhido->filiacao != NULL) {
-                        candidatoEscolhido->voto++;
-                        (*votosValidos)++;
-                        printf("Erro op 1!! %s\n", candidatoEscolhido->filiacao->siglaPrtd);
-                        incrementarVoto(P, *numPartidos, F, *numFederacao, candidatoEscolhido->filiacao->siglaPrtd);
-                        printf("Voto registrado para %s\n", candidatoEscolhido->nomeCandidato);
-                    } else if (!candidatoEscolhido) {
-                        (*votosNulos)++;
-                        printf("Voto Nulo registrado.\n");
-                    } else {
-                        printf("Erro tristeza!!\n");
+                    if (votoConfirmado == 1) {  // Confirmar voto
+                        if (candidatoEscolhido && candidatoEscolhido->filiacao != NULL) {
+                            candidatoEscolhido->voto++;
+                            (*votosValidos)++;
+                            incrementarVoto(P, *numPartidos, F, *numFederacao, candidatoEscolhido->filiacao->siglaPrtd);
+                            printf("Voto registrado para %s\n", candidatoEscolhido->nomeCandidato);
+                        } else if (!candidatoEscolhido) {
+                            (*votosNulos)++;
+                            printf("Voto Nulo registrado.\n");
+                        }
                     }
-                } else if (votoConfirmado == 3) {  // Votar em branco
-                    (*votosBranco)++;
-                    printf("Voto em Branco registrado.\n");
-                }
-                else {
-                    printf("Voltou!\n");
-                }
+                    else if (votoConfirmado == 2){
+                        break;
+                    } else if (votoConfirmado == 3) {  // Votar em branco
+                        (*votosBranco)++;
+                        printf("Voto em Branco registrado.\n");
+                    } else {
+                        printf("Escolha entre as opções disponiveis.\n");
+                    }
+                }while(votoConfirmado != 1 && votoConfirmado != 3);
                 // Retornar não faz nada, apenas volta ao menu de votação
             } else if (opcao == 2) {  // Encerrar votação
                 continuar = 0;
@@ -941,6 +947,7 @@ void menu(){
             printf("|__________________________________|\n");
 
             iniciarVotacao(C, &contadorCandidatos, &votosValidos, &votosBranco, &votosNulos, q_eleitoral, P, &contadorPartidos, F, &contadorFederacao);
+            break;
         }
     }while(op != 5);
         printf("Finalizando...\n");
