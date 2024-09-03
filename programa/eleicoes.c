@@ -138,19 +138,31 @@ int letras(char *soLetra){
 int verificaNumeroCandidato(char* numCandidato){
     int i;
     int tam = strlen(numCandidato);
-    int ch;
+    int verifica = 0;   
 
-    if(tam != 6){
-        return 0; // Tem menos ou mais que 5 dígitos
-    }
-    for(i = 0; i < 5; i++){
-        if(!isdigit((unsigned char)numCandidato[i])){
-            return 0; // Não são apenas números 
+    printf("numCandidato: %s\n", numCandidato);
+    printf("tam: %d\n", tam);
+
+    if(tam == 5) {
+        for (i=0; i<tam; i++) {
+            if (numCandidato[i] >= '0' && numCandidato[i] <= '9') {
+                verifica++;
+                printf("%d\n", verifica);
+            }
         }
+        if (verifica == 5) {
+            return 1;
+        } else {
+            printf("O número do candidato deve conter apenas números.\n");
+            return 0;
+        }
+    } else {
+        printf("O número do candidato precisa ter 5 dígitos.\n");
+        return 0;
     }
-    while ((ch = getchar()) != '\n' && ch != EOF);
-    return 1; //pode
+    return 0;
 }
+
 
 int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
     int i;
@@ -287,9 +299,10 @@ void cadastrarPartido(partidos*P, int *contador){
 
 void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos){
     char nomeCandidato[50];
-    char numCandidato[6];
+    char numCandidato[10];
     char partido[50];
     int idadeCandidato;
+    int erro = 0;
     int existePartido, existeNome, existeNumCandidato;
     partidos *filiacao = NULL;
     /*Verificar se o candidato já existe(nome composto(fgets)), se o numero já exite, se o partido que 
@@ -314,12 +327,18 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
 
     if(!letras(partido)){
         printf("O nome do partido deve conter apenas letras!\n");
+        erro++;
     }
     if(!letras(nomeCandidato)){
         printf("O nome do candidato deve conter apenas letras!\n");
+        erro++;
     }
     if(!verificaNumeroCandidato(numCandidato)){
         printf("Número do candidato inválido! Faça novamente o cadastro...\n");
+        erro++;
+    }
+    if(erro >= 1){
+        return;
     }
 
     existePartido = verificaExistenciaPartido(P, numPartidos, partido);
@@ -327,7 +346,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     existeNumCandidato = numCandidatoExiste(C, numCandidato, *contador);
 
     filiacao = NULL;
-    if(existePartido && !existeNome && !existeNumCandidato){
+    if(existePartido && !existeNome && !existeNumCandidato /*&& verificaNumeroCandidato(numCandidato)*/){
         for(int i = 0; i<numPartidos; i++){
             if(strcmp(P[i].nomePrtd, partido) == 0){
                 filiacao = &P[i];
