@@ -4,13 +4,12 @@
 #include <ctype.h>
 
 
-// STRUCTS E ALOCAÇÃO DE MEMÓRIA //
+// STRUCTS E ALOCAÇÃO DE MEMÓRIA
 typedef struct{
     char nomePrtd[50];
     char siglaPrtd[10];
     char siglaFederacao[10];
     int voto;
-    // Ponteiro para vetor de candidato
 }partidos; 
 
 
@@ -29,9 +28,7 @@ typedef struct{
     char siglaFederacao[10];
     int voto;
     int numPartido;
-    partidos* partidosNaFederacao;
-    
-    // Ponteiro para vetor de candidato 
+    partidos* partidosNaFederacao; 
 }federacao;
 
 
@@ -55,7 +52,6 @@ candidato* alocaVetCandidatos(int tam){
     if (vetCandidato == NULL){
         printf("Erro: alocação mal sucedida!");
         exit(1);
-
     }
     return vetCandidato;
 }
@@ -69,13 +65,13 @@ federacao* alocaVetFederacao(int tam){
     if (vetFederacao == NULL){
         printf("Erro: alocação mal sucedida!");
         exit(1);
-
     }
     return vetFederacao;
 }
 
 
 void normalizaString(char *str) {
+    /*Função responsável por transformar as letras que o usuário passa nas entradas em maiusculas. Ele não retorna nada. */
     for (int i = 0; str[i]; i++) {
         str[i] = toupper(str[i]);
     }
@@ -84,11 +80,8 @@ void normalizaString(char *str) {
 
 int verificaExistenciaPartido(partidos*P, int tam, char* nome){
     /*
-        A função verifica se o partido digitado pelo usuário existe. A mesma foi criada
-        com a intencao de verificar se o partido existe, a fim de não registrar outro com o
-        mesmo nome. O mesmo acontece para fazer parte da federacao, visto que o partido só pode
-        participar de uma federaçao.
-        Ela retorna 1 caso o partido exista, caso contrário, retorna 0
+        A função verifica se o partido digitado pelo usuário existe, a fim de não registrar outro com o
+        mesmo nome. Ela retorna 1 caso o partido exista, caso contrário, retorna 0
     */
     int i;
     char nomeNormal[50];
@@ -106,6 +99,8 @@ int verificaExistenciaPartido(partidos*P, int tam, char* nome){
 
 
 int verificaSiglaPrtd(partidos*P, int tam, char* nome){
+    /*A função verifica se a sigla do partido digitado pelo usuário existe, a fim de não registrar outro com o
+        mesmo nome. Ela retorna 1 caso o partido exista, caso contrário, retorna 0*/
     int i;
     char nomeNormal[10];
     strcpy(nomeNormal, nome);
@@ -123,7 +118,7 @@ int verificaSiglaPrtd(partidos*P, int tam, char* nome){
 
 int letras(char *soLetra){
     /*Função é utilizada para verificar a entrada do usuário é apenas letra.
-    É utilizado na função cadastrarPartidos, ....., para que não haja número no nome e na sigla.
+    É utilizado em todas as funções de cadastro, para que não haja número no nome e na sigla.
     A função retorna zero, se não tem apenas letra, caso contrário retorna 1*/
     int i;
     for (i = 0; soLetra[i] != '\0'; i++) {
@@ -136,6 +131,8 @@ int letras(char *soLetra){
 }
 
 int verificaNumeroCandidato(char* numCandidato){
+    /*A função verifica se o número do candidato digitado pelo usuário existe, a fim de não registrar outro com o
+        mesmo. Ela retorna 1 caso o partido exista, caso contrário, retorna 0*/
     int i;
     int tam = strlen(numCandidato);
     int verifica = 0;   
@@ -161,6 +158,8 @@ int verificaNumeroCandidato(char* numCandidato){
 
 
 int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
+    /*A função verifica se o nome do candidato digitado pelo usuário existe, a fim de não registrar outro com o
+        mesmo. Ela retorna 1 caso o partido exista, caso contrário, retorna 0*/
     int i;
     char nomeNormal[50];
     strcpy(nomeNormal, nomeC);
@@ -188,7 +187,7 @@ int numCandidatoExiste (candidato*C, char *numCandidato, int tam){
 
 int verificaExisFederacao(federacao*F, int tam, char* nome){
     /*A função verifica se a federação que o usuário deseja inserir já existe. Caso a federação 
-    exista a função retorna 1, caso contrário retorna 0. Quando é a função retorna zero é possível
+    exista a função retorna 1, caso contrário retorna 0. Quando a função retorna 0 é possível
     registrar a federação.*/
     int i;
     char nomeNormal[50];
@@ -207,6 +206,7 @@ int verificaExisFederacao(federacao*F, int tam, char* nome){
 
 //Partido em Outra Federacao//
 int partidoEmOutraFederacao(partidos* P, int numFederacoes, char* siglaPartido){
+    /*Essa função verifica se o partido que o usuário passou na entrada já faz parte de uma federação. Retorna 1 caso o partido faça parte de uma federação e 0 caso contrário.*/
     int i;
     char nomeNormal[10];
     strcpy(nomeNormal, siglaPartido);
@@ -226,6 +226,7 @@ int partidoEmOutraFederacao(partidos* P, int numFederacoes, char* siglaPartido){
 
 
 int obterInteiro() {
+    /*Verifica se o que o usuário passou na entra é número. Retorna o valor que o usuário passou, caso contrário retorna mensagem de erro.*/
     int valor;
     char ch;
 
@@ -254,6 +255,7 @@ int obterInteiro() {
 
 
 void cadastrarPartido(partidos*P, int *contador){
+    /*Função responsável por cadastrar e verificar se todas as entradas do partido estão certas. Não retorna nada.*/
     char nome[50];
     char sigla[10];
     int existePartido, existeSigla;
@@ -266,13 +268,11 @@ void cadastrarPartido(partidos*P, int *contador){
     printf("\n");
 
     if(!letras(nome)){
-        //Dando erro quando põe acentos
         printf("O nome do partido deve conter apenas letras!\n");
         return;
     }
     if (!letras(sigla)){
-        //Dando erro quando põe acentos
-        printf("A sigla/ deve conter apenas letras!\n");
+        printf("A sigla deve conter apenas letras!\n");
         return;
     }
 
@@ -295,6 +295,7 @@ void cadastrarPartido(partidos*P, int *contador){
 }
 
 void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos){
+    /*Função responsável por cadastrar e verificar se todas as entradas do candidato estão certas. Não retorna nada.*/
     char nomeCandidato[50];
     char numCandidato[10];
     char partido[50];
@@ -302,8 +303,6 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     int erro = 0;
     int existePartido, existeNome, existeNumCandidato;
     partidos *filiacao = NULL;
-    /*Verificar se o candidato já existe(nome composto(fgets)), se o numero já exite, se o partido que 
-    ele quer participar existe*/
     
     printf("Partido Filiado: ");
     fgets(partido, sizeof(partido), stdin);
@@ -344,7 +343,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
     existeNumCandidato = numCandidatoExiste(C, numCandidato, *contador);
 
     filiacao = NULL;
-    if(existePartido && !existeNome && !existeNumCandidato /*&& verificaNumeroCandidato(numCandidato)*/){
+    if(existePartido && !existeNome && !existeNumCandidato){
         for(int i = 0; i<numPartidos; i++){
             if(strcmp(P[i].nomePrtd, partido) == 0){
                 filiacao = &P[i];
@@ -375,6 +374,7 @@ void cadastrarCandidato(candidato*C, partidos*P, int *contador, int numPartidos)
 
 
 void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int numPartidos){
+    /*Função responsável por cadastrar e verificar se todas as entradas da federação estão certas. Não retorna nada.*/
     char nomeF[50];
     char siglaF[10];
     char siglaPartidoInserir[50];
@@ -452,10 +452,8 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     
 }
 
-// DIFERENTE E QUEBRANDO CÓDIGO
-// Incrementa o voto no partido ou federação correto
 void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederacao, char* siglaPartido) {
-
+    /*Função responsável por contar os votos, tanto dos partidos quanto das federações. Não retorna nada.*/
      normalizaString(siglaPartido);
     //
     int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
@@ -473,8 +471,7 @@ void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederaca
 
 
 void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_eleitoral){
-    // Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. 
-
+    /* Função responsavél por mostrar na tela os votos gerais, valídos, brancos, nulos e o quociente eleitoral. Não retorna nada. */ 
     int votos = 0;
 
     *q_eleitoral += (*q_eleitoral + *votosValidos)/24;
@@ -491,6 +488,7 @@ void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_elei
 
 }
 void secao2(candidato* C, int numCandidatos) {
+    /*Função responsavél por mostrar na tela o nome e o número total de votos que cada candidato obteve. Não retorna nada. */
     printf("_____________________________________________\n");
     printf("|                                           |\n");
     printf("|            Candidatos e Votos             |\n");
@@ -509,7 +507,7 @@ void secao2(candidato* C, int numCandidatos) {
 
 
 void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
-   // Função responsavél por mostrar na tela o número total de votos que cada partido/federação obteve. 
+   /* Função responsavél por mostrar na tela o nome e o número total de votos que cada partido/federação obteve. Não retorna nada.*/
 
     printf("_____________________________________________\n");
     printf("|                                           |\n");
@@ -543,7 +541,7 @@ void secao3(partidos* P, int numPartidos, federacao* F, int numFederacao){
 }
 
 void secao4(partidos* P, int numPartidos, federacao* F, int numFederacao, int votosValidos){
-   // Função responsavél por mostrar na tela uma tabela informando o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. 
+    /*Função responsavél por mostrar na tela uma tabela informando o nome, o quociente partidário de cada partido ou federação e o número de cadeiras ao qual ele tem direito. Não retorna nada*/
     double quocienteEleitoral = (double)votosValidos / 24;
 
     if (votosValidos == 0) {
@@ -577,7 +575,7 @@ void secao4(partidos* P, int numPartidos, federacao* F, int numFederacao, int vo
 }
 
 void secao5(candidato* C, int numCandidatos, double q_eleitoral){
-   // Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua legenda.
+   /*Função responsavél por mostrar na tela uma tabela com os nomes dos candidatos eleitos e sua respectiva legenda. Não retorna nada.*/
     printf("____________________________________________________________\n");
     printf("|                                                          |\n");
     printf("|               Candidatos Eleitos e Legenda               |\n");
@@ -627,6 +625,7 @@ void secao5(candidato* C, int numCandidatos, double q_eleitoral){
 
 
 void secao6(candidato* C, int numCandidatos, double q_eleitoral) {
+    /*Função responsável por mostrar na tela uma tabela com os candidatos suplentes, em ordem decrescente de quociente eleitoral. Em caso de empate, o candidato com maior idade terá preferência. Não retorna nada.*/
     // Vetor para armazenar suplentes
     candidato* suplentes = malloc(numCandidatos * sizeof(candidato));
     int contadorSuplentes = 0;
@@ -675,13 +674,11 @@ void secao6(candidato* C, int numCandidatos, double q_eleitoral) {
 
 
 void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos, double q_eleitoral, partidos* P, int* numPartidos, federacao* F, int* numFederacao) {
-    /* FAZER  O DOCSTRING */
+    /* Função responsável por mostrar na tela todos os menus relacionados a votação, confirma e conta os votos, por fim mostra todas as seções do programa. Não retorna nada. */
     int continuar = 1;
     int opcao, votoConfirmado = 0;
     int escola;
     char numCandidato[6]; // 5 dígitos + '\0'
-
-    // Verificar pq não entra no if
     candidato *candidatoEscolhido = NULL;
 
     while (continuar) {
@@ -762,7 +759,6 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
                         printf("Escolha entre as opções disponiveis.\n");
                     }
                 }while(votoConfirmado != 1 && votoConfirmado != 3);
-                // Retornar não faz nada, apenas volta ao menu de votação
             } else if (opcao == 2) {  // Encerrar votação
                 continuar = 0;
                 printf("____________________________________\n");
@@ -802,14 +798,11 @@ void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* voto
                 printf("Opção inválida. Por favor, escolha novamente.\n");
             }
         }
-        // COLOCAR GETCHAR() PARA PRESSIONAR ENTER PARA CONTINUAR
     }
-
-    // Não pode voltar para o menu depois do usuario escolher a opção de numero 2 no menu de votação 
 }
 
 void menu(){
-    // Criar contadores para cada opção!! 
+    /*Função responsável por armazenar o valor de todas as variavéis, mostrar os menus principais, de cadastros, inicio da votação e finalizar o programa. Não retorna nada. */
     int continuar = 1;
     int op;
     int votosValidos = 0, votosNulos = 0, votosBranco = 0;
@@ -955,34 +948,7 @@ void menu(){
 }
 
 int main() {
-
+    /*Função responsável por chamar o menu e retorna 0.*/
     menu();
-
     return 0;
 }
-
-
-/* CASO TENHA TEMPO, TENTAR INCLUIR A EXTENSÃO TIME.H PARA PEGAR A HORA DO COMPUTADOR E MOSTRA A HORA EXATA QUE CADA VOTO FOI COMPUTADO.  
-int main() {
-    // Variável para armazenar o tempo atual
-    time_t tempo_atual;
-    // Estrutura para armazenar a data e hora local
-    struct tm *hora_local;
-    // String para armazenar a hora formatada
-    char buffer[80];
-
-    // Obtém o tempo atual em segundos desde 1 de Janeiro de 1970 (Epoch)
-    time(&tempo_atual);
-
-    // Converte o tempo para a hora local
-    hora_local = localtime(&tempo_atual);
-
-    // Formata a hora em uma string legível
-    strftime(buffer, 80, "Hora atual: %H:%M:%S", hora_local);
-
-    // Imprime a hora atual
-    printf("%s\n", buffer);
-
-    return 0;
-}*/
-//XEBIU
