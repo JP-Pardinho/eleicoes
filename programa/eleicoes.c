@@ -71,9 +71,10 @@ federacao* alocaVetFederacao(int tam){
 
 
 void normalizaString(char *str) {
-    /*Função responsável por transformar as letras que o usuário passa nas entradas em maiusculas. Ele não retorna nada. */
+    /*Função responsável por transformar as letras que o usuário 
+    passa nas entradas em maiusculas. Ele não retorna nada. */
     for (int i = 0; str[i]; i++) {
-        str[i] = toupper(str[i]);
+        str[i] = tolower(str[i]);
     }
 }
 
@@ -117,7 +118,7 @@ int verificaSiglaPrtd(partidos*P, int tam, char* nome){
 
 
 int letras(char *soLetra){
-    /*Função é utilizada para verificar a entrada do usuário é apenas letra.
+    /*A função é utilizada para verificar a entrada do usuário é apenas letra.
     É utilizado em todas as funções de cadastro, para que não haja número no nome e na sigla.
     A função retorna zero, se não tem apenas letra, caso contrário retorna 1*/
     int i;
@@ -131,8 +132,8 @@ int letras(char *soLetra){
 }
 
 int verificaNumeroCandidato(char* numCandidato){
-    /*A função verifica se o número do candidato digitado pelo usuário existe, a fim de não registrar outro com o
-        mesmo. Ela retorna 1 caso o partido exista, caso contrário, retorna 0*/
+    /*A função verifica se o número do candidato digitado pelo usuário é um string 
+    com 5 casas do tipo inteiro, a fim de não registrar numeros que números inválidos*/
     int i;
     int tam = strlen(numCandidato);
     int verifica = 0;   
@@ -158,8 +159,9 @@ int verificaNumeroCandidato(char* numCandidato){
 
 
 int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
-    /*A função verifica se o nome do candidato digitado pelo usuário existe, a fim de não registrar outro com o
-        mesmo. Ela retorna 1 caso o partido exista, caso contrário, retorna 0*/
+    /*A função verifica se o nome do candidato digitado pelo usuário existe, 
+    a fim de não registrar outro com o mesmo. Ela retorna 1 caso o nome 
+    do candidato exista, caso contrário, retorna 0*/
     int i;
     char nomeNormal[50];
     strcpy(nomeNormal, nomeC);
@@ -175,6 +177,9 @@ int verificaNomeCandidato(candidato*C, int tam, char* nomeC){
 }
 
 int numCandidatoExiste (candidato*C, char *numCandidato, int tam){
+    /*A função verifica se o número do candidato digitado pelo usuário
+     já foi inserido no cadastro de outro eleitor, a fim de não registar 
+     outro candidato com o mesmo numero. Ela retorna 1 caso o número do candida*/
     int i;
     for(i=0; i<tam; i++){
         if(strcmp(C[i].num_canditados, numCandidato) == 0){
@@ -417,7 +422,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
         normalizaString(siglaPartidoInserir);
         siglaPartidoInserir[strcspn(siglaPartidoInserir, "\n")] = '\0';
 
-        if (strcmp(siglaPartidoInserir, "FIM") == 0){
+        if (strcmp(siglaPartidoInserir, "fim") == 0){
             if(F[*contadorFederacao].numPartido < 2){
                 printf("ERRO: Uma federação deve conter pelo menos 2 partidos!\n");
                 return;
@@ -475,8 +480,8 @@ void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_elei
     int votos = 0;
 
     *q_eleitoral += (*q_eleitoral + *votosValidos)/24;
-
     votos += *votosValidos + *votosNulos + *votosBranco;
+    
     printf("_____________________________________________\n");
     printf("|                                           |\n");
     printf("            Votos totais: %d                \n", votos);
