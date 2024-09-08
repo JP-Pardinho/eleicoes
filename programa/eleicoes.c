@@ -263,6 +263,7 @@ void cadastrarPartido(partidos*P, int *contador){
     /*Função responsável por cadastrar e verificar se todas as entradas do partido estão certas. Não retorna nada.*/
     char nome[50];
     char sigla[10];
+    int erro = 0;
     int existePartido, existeSigla;
     printf("Digite o nome do partido: ");
     fgets(nome, sizeof(nome), stdin);
@@ -274,10 +275,13 @@ void cadastrarPartido(partidos*P, int *contador){
 
     if(!letras(nome)){
         printf("O nome do partido deve conter apenas letras!\n");
-        return;
+        erro++;
     }
     if (!letras(sigla)){
         printf("A sigla deve conter apenas letras!\n");
+        erro++;
+    }
+    if (erro >= 1){
         return;
     }
 
