@@ -457,22 +457,6 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     
 }
 
-void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederacao, char* siglaPartido) {
-    /*Função responsável por contar os votos, tanto dos partidos quanto das federações. Não retorna nada.*/
-     normalizaString(siglaPartido);
-    //
-    int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
-    if (iFederacao != 0) {  // Verifica se a federação foi encontrada
-        F[iFederacao].voto++;  // Incrementa o voto na federação
-    } else {
-        for (int i = 0; i < numPartidos; i++) {
-            if (strcmp(P[i].siglaPrtd, siglaPartido) == 0) {
-                P[i].voto++;  // Incrementa o voto no partido
-                break;
-            }
-        }
-    }
-}
 
 
 void secao1(int* votosValidos, int* votosNulos, int* votosBranco, double* q_eleitoral){
@@ -677,6 +661,22 @@ void secao6(candidato* C, int numCandidatos, double q_eleitoral) {
     free(suplentes);
 }
 
+void incrementarVoto(partidos* P, int numPartidos, federacao* F, int numFederacao, char* siglaPartido) {
+    /*Função responsável por contar os votos, tanto dos partidos quanto das federações. Não retorna nada.*/
+     normalizaString(siglaPartido);
+    //
+    int iFederacao = verificaExisFederacao(F, numFederacao, siglaPartido);
+    if (iFederacao != 0) {  // Verifica se a federação foi encontrada
+        F[iFederacao].voto++;  // Incrementa o voto na federação
+    } else {
+        for (int i = 0; i < numPartidos; i++) {
+            if (strcmp(P[i].siglaPrtd, siglaPartido) == 0) {
+                P[i].voto++;  // Incrementa o voto no partido
+                break;
+            }
+        }
+    }
+}
 
 void iniciarVotacao(candidato* C, int* numCandidatos, int* votosNulos, int* votosBranco, int* votosValidos, double q_eleitoral, partidos* P, int* numPartidos, federacao* F, int* numFederacao) {
     /* Função responsável por mostrar na tela todos os menus relacionados a votação, confirma e conta os votos, por fim mostra todas as seções do programa. Não retorna nada. */
