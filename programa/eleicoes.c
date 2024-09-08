@@ -400,9 +400,10 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
     fgets(nomeF, sizeof(nomeF), stdin);
     normalizaString(nomeF);
     nomeF[strcspn(nomeF, "\n")] = '\0'; // Remove o \n da nova linha;
-    
+
     if(!letras(nomeF)){
         printf("ERRO: O nome da federação deve conter apenas letras!\n");
+        return;
     }
     if(verificaExisFederacao(F, *contadorFederacao, nomeF)){
         printf("ERRO: Existe uma federação com esse nome!\n");
@@ -416,6 +417,7 @@ void registrarFederacao(federacao*F,partidos*P,  int *contadorFederacao, int num
 
     if(!letras(siglaF)){
         printf("ERRO: A sigla da federação deve conter apenas letras!\n");
+        return;
     }
     if(verificaExisFederacao(F, *contadorFederacao, siglaF)){
         printf("ERRO: Existe uma federação com essa sigla!\n");
