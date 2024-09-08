@@ -203,6 +203,8 @@ int verificaExisFederacao(federacao*F, int tam, char* nome){
         normalizaString(F[i].nomeFederacao);
         if(strcmp(F[i].nomeFederacao, nomeNormal) == 0){
             return 1; //Federacao encontrada
+        } else if (strcmp(F[i].siglaFederacao, nomeNormal) == 0){
+            return 1;
         }
     }
     return 0; //Federacao não encontrada
